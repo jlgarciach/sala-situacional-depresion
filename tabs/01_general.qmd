@@ -1,0 +1,477 @@
+# General
+
+##  {.sidebar}
+
+### Información general
+
+Este tablero está conectado con un formulario de KoBo Collet
+
+------------------------------------------------------------------------
+
+**Formulario electrónico**
+
+El formulario fue desarrollado e implementado en KoBo Collect, utilizando los servicios en su versión gratuita.
+
+La información de este formulario está conectada directamente al tablero para poder mantener la información actualizada y en tiempo real.
+
+```{=html}
+<div style="margin-top:20px;">
+  <a href="https://ee-eu.kobotoolbox.org/x/63e5scrM" 
+     target="_blank"
+     style="
+       background-color:#0072B2;
+       color:white;
+       padding:12px 20px;
+       text-decoration:none;
+       border-radius:8px;
+       font-weight:bold;
+       font-size:16px;
+     ">
+     📋 Formulario electrónico
+  </a>
+</div>
+```
+
+------------------------------------------------------------------------
+
+**Formulario en PDF**
+
+El formulario se puede descargar en su versión digital (PDF) para poder analizarlo
+
+```{=html}
+<div style="margin-top:20px;">
+
+  <a href="Formulario%20de%20Vigilancia%20Epidemiol%C3%B3gica%20de%20s%C3%ADntomas%20depresivos%20en%20estudiantes%20universitarios.pdf"
+     target="_blank"
+     style="
+       background-color:#2E75B6;
+       color:white;
+       padding:16px 28px;
+       text-decoration:none;
+       border-radius:12px;
+       font-weight:bold;
+       font-size:18px;
+       display:inline-block;
+       box-shadow:0 3px 10px rgba(0,0,0,.15);
+     ">
+
+     📋 Formulario en PDF
+
+  </a>
+
+</div>
+```
+
+------------------------------------------------------------------------
+
+**Base de datos**
+
+- Metadatos
+- Base de datos
+
+sadfasdf asdfasdf <CSV> <Excel> <SPSS>
+
+## Row
+
+### Paso 1: Conexión al formulario de KoBo Collect
+
+```{r}
+#| echo: false
+# Carga de datos
+# ==============================
+# 01_conexion_kobo.R
+# ==============================
+
+
+# Token de KoBo
+token <- Sys.getenv("KOBO_TOKEN")
+
+# UID del formulario
+asset_uid <- "ajrkCYCEQbDTnWHPfLvBrC"
+
+# Servidor KoBo
+#base_url <- "https://kf.kobotoolbox.org"   # servidor global
+ base_url <- "https://eu.kobotoolbox.org" # si usas servidor europeo
+
+# URL de datos
+url_data <- paste0(base_url, "/api/v2/assets/", asset_uid, "/data/?format=json")
+
+# Solicitud
+respuesta <- GET(
+  url_data,
+  add_headers(Authorization = paste("Token", token))
+)
+
+# Código de respuesta
+codigo <- status_code(respuesta)
+
+# Validación
+if (codigo == 200) {
+
+  cat("✅ Conexión exitosa con KoBoToolbox\n")
+  cat("Código HTTP:", codigo)
+
+} else {
+
+  cat("❌ Error en la conexión\n")
+  cat("Código HTTP:", codigo)
+
+}
+```
+
+### Paso 2: Carga de datos recolectados en el formulario
+
+```{r}
+#| echo: false
+# ==============================
+# Paso 2: Descarga completa de datos
+# ==============================
+
+# URL inicial de consulta
+url_actual <- url_data
+
+# Lista vacía para almacenar páginas
+lista_datos <- list()
+
+# Contador de páginas
+pagina <- 1
+
+# Bucle para recorrer todas las páginas
+while (!is.null(url_actual) && !is.na(url_actual)) {
+  
+  # Solicitud GET a la página actual
+  respuesta_pagina <- GET(
+    url_actual,
+    
+    add_headers(
+      Authorization = paste("Token", token)
+    )
+  )
+  
+  # Convertir contenido JSON a texto
+  contenido <- content(
+    respuesta_pagina,
+    as = "text",
+    encoding = "UTF-8"
+  )
+  
+  # Convertir JSON a lista R
+  json_pagina <- fromJSON(
+    contenido,
+    flatten = TRUE
+  )
+  
+  # Guardar registros de la página actual
+  lista_datos[[pagina]] <- json_pagina$results
+  
+  # Mostrar avance de descarga
+  cat("📥 Página descargada:", pagina, "\n")
+  
+  # Obtener URL de la siguiente página
+  url_actual <- json_pagina[["next"]]
+  
+  # Incrementar contador
+  pagina <- pagina + 1
+}
+
+# Unir todas las páginas en un solo dataframe
+datos <- bind_rows(lista_datos)
+
+# Mostrar resumen final
+cat(
+  "📊 Registros descargados:",
+  nrow(datos),
+  "\n"
+)
+
+cat(
+  "📌 Variables encontradas:",
+  ncol(datos)
+)
+
+# ====================================
+# Fecha de última actualización
+# ====================================
+
+# Convertir fecha
+datos$`_submission_time` <- as.POSIXct(
+  datos$`_submission_time`,
+  format = "%Y-%m-%dT%H:%M:%OS",
+  tz = "UTC"
+)
+
+# Obtener última fecha
+ultima_fecha <- max(datos$`_submission_time`, na.rm = TRUE)
+
+# Mostrar leyenda
+cat(
+  "📅 Registros actualizados al:",
+  format(ultima_fecha, "%d/%m/%Y %H:%M"),
+  "\n"
+)
+
+```
+
+### Paso 3: Carga metadata del formulario
+
+```{r}
+#| echo: false
+# ==============================
+# Paso 3: Carga de metadata
+# ==============================
+
+# URL de metadata del formulario
+url_metadata <- paste0(
+  base_url,
+  "/api/v2/assets/",
+  asset_uid,
+  "/?format=json"
+)
+
+# Solicitud de metadata
+respuesta_metadata <- GET(
+  url_metadata,
+  add_headers(
+    Authorization = paste("Token", token)
+  )
+)
+
+# Código de respuesta
+codigo_metadata <- status_code(respuesta_metadata)
+
+# Validación
+if (codigo_metadata == 200) {
+  
+  cat("✅ Metadata cargada exitosamente desde KoBoToolbox\n")
+  cat("Código HTTP:", codigo_metadata)
+  
+} else {
+  
+  cat("❌ Error al cargar la metadata\n")
+  cat("Código HTTP:", codigo_metadata)
+  
+}
+
+# Convertir metadata JSON a lista
+metadata_json <- content(
+  respuesta_metadata,
+  as = "text",
+  encoding = "UTF-8"
+)
+
+metadata <- fromJSON(
+  metadata_json,
+  flatten = TRUE
+)
+
+# Extraer estructura del formulario
+survey <- metadata$content$survey
+choices <- metadata$content$choices
+settings <- metadata$content$settings
+
+# Verificación de la metadata
+cat("\n\n📋 Preguntas encontradas:", nrow(survey), "\n")
+cat("🔘 Opciones encontradas:", nrow(choices), "\n")
+```
+
+## Row
+
+### Revisión de preguntas
+
+```{r}
+#| echo: false
+head(survey)
+```
+
+### Revisión de respuestas
+
+```{r}
+#| echo: false
+head(choices)
+```
+
+### Paso 4: Base de datos final para iniciar el análisis
+
+```{r}
+#| echo: false
+# ==============================
+# Paso 4: Construcción de base limpia
+# ==============================
+
+variables_interes <- c(
+  "G0/Fecha",
+  
+  "G1/Sexo",
+  "G1/Edad",
+  "G1/Departamento",
+  "G1/Universidad",
+  "G1/Universidad_otra",
+  "G1/Facultad",
+  "G1/AnioU",
+  "G1/nivelAcademico",
+  
+  "G2/p8",
+  "G2/p9",
+  
+  "G3/p10",
+  "G3/p11",
+  "G3/p12",
+  "G3/p13",
+  "G3/p14",
+  "G3/p15",
+  "G3/p16",
+  "G3/p17",
+  
+  "G4/p18",
+  "G4/p19",
+  "G4/p20",
+  "G4/p21",
+  "G4/p22",
+  
+  "total_depresion",
+  "clasificacion_depresion",
+  "total_estres",
+  "clasificacion_estres"
+)
+
+DB_Depresion <- datos %>%
+  select(any_of(variables_interes)) %>%
+  rename(
+    Fecha = `G0/Fecha`,
+    Sexo = `G1/Sexo`,
+    Edad = `G1/Edad`,
+    Departamento = `G1/Departamento`,
+    Universidad = `G1/Universidad`,
+    Facultad = `G1/Facultad`,
+    AnioU = `G1/AnioU`,
+    nivelAcademico = `G1/nivelAcademico`,
+    p8 = `G2/p8`,
+    p9 = `G2/p9`,
+    p10 = `G3/p10`,
+    p11 = `G3/p11`,
+    p12 = `G3/p12`,
+    p13 = `G3/p13`,
+    p14 = `G3/p14`,
+    p15 = `G3/p15`,
+    p16 = `G3/p16`,
+    p17 = `G3/p17`,
+    p18 = `G4/p18`,
+    p19 = `G4/p19`,
+    p20 = `G4/p20`,
+    p21 = `G4/p21`,
+    p22 = `G4/p22`
+  )
+
+
+cat("✅ Base limpia creada correctamente\n")
+cat("📊 Registros:", nrow(DB_Depresion), "\n")
+cat("📌 Variables:", ncol(DB_Depresion))
+
+# Cuando existe la variable
+#if ("G1/Universidad_otra" %in% names(DB_Depresion)) {
+#  DB_Depresion <- DB_Depresion %>%
+#    rename(Universidad_otra = `G1/Universidad_otra`)
+#}
+
+# Mostrar primeras filas
+#head(DB_Depresion)
+
+
+```
+
+## Row
+
+### Paso 5: Revisión de tabla final para iniciar el análisis
+
+```{r}
+#| echo: false
+# ==============================
+# Paso 5: Visualización de la base final
+# ==============================
+
+library(DT)
+
+datatable(
+  DB_Depresion,
+  
+  options = list(
+    pageLength = 10,
+    scrollX = TRUE,
+    autoWidth = TRUE
+  ),
+  
+  caption = "Base epidemiológica limpia - DB_Depresion",
+  
+  rownames = FALSE
+)
+```
+
+### Paso 6: Revisión de tabla final para iniciar el análisis (**con etiquetas**)
+
+```{r}
+#| echo: false
+# ==============================
+# Paso 6: Etiquetado automático usando metadata
+# ==============================
+
+DB_Depresion_label <- DB_Depresion
+
+for (var in names(DB_Depresion_label)) {
+  
+  info_var <- survey %>%
+    filter(name == var)
+  
+  if (nrow(info_var) > 0) {
+    
+    tipo <- info_var$type[1]
+    
+    if (grepl("select_one", tipo)) {
+      
+      lista <- info_var$select_from_list_name[1]
+      
+      if (is.na(lista) || lista == "") {
+        lista <- stringr::str_remove(tipo, "select_one ")
+      }
+      
+      diccionario <- choices %>%
+        filter(list_name == lista) %>%
+        mutate(
+          codigo_1 = as.character(name),
+          codigo_2 = as.character(`$autovalue`),
+          etiqueta = as.character(label)
+        )
+      
+      valores <- as.character(DB_Depresion_label[[var]])
+      
+      etiqueta_1 <- diccionario$etiqueta[
+        match(valores, diccionario$codigo_1)
+      ]
+      
+      etiqueta_2 <- diccionario$etiqueta[
+        match(valores, diccionario$codigo_2)
+      ]
+      
+      DB_Depresion_label[[var]] <- dplyr::coalesce(
+        etiqueta_1,
+        etiqueta_2,
+        valores
+      )
+    }
+  }
+}
+
+cat("✅ Base etiquetada automáticamente creada\n")
+
+
+# Muestra la tabla con etiquetas
+DT::datatable(
+  DB_Depresion_label,
+  options = list(
+    pageLength = 10,
+    scrollX = TRUE,
+    autoWidth = TRUE
+  ),
+  caption = "Base epidemiológica limpia y etiquetada automáticamente",
+  rownames = FALSE
+)
+```

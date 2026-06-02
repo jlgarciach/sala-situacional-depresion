@@ -1,0 +1,219 @@
+# Análisis inferencial
+
+## Row {height="80px"}
+
+Este módulo evalúa la asociación estadística entre los niveles de estrés académico y depresión, identificando la magnitud del riesgo y la significancia epidemiológica de los hallazgos.
+
+## Row {height="55px"}
+
+```{=html}
+<div class="powerbi-section-title">
+1. Asociación entre depresión y estrés
+</div>
+```
+
+## Row {height="360px"}
+
+### Column {width="45%"}
+
+```{r}
+tabla_2x2 <- table(
+  base_compuestas$clasificacion_estres,
+  base_compuestas$clasificacion_depresion
+)
+
+tabla_2x2_df <- as.data.frame.matrix(tabla_2x2) %>%
+  tibble::rownames_to_column("Estrés") %>%
+  mutate(Total = Alta + Baja)
+
+fila_total <- data.frame(
+  Estrés = "Total",
+  Alta = sum(tabla_2x2_df$Alta),
+  Baja = sum(tabla_2x2_df$Baja),
+  Total = sum(tabla_2x2_df$Total)
+)
+
+tabla_2x2_final <- bind_rows(tabla_2x2_df, fila_total)
+
+tabla_2x2_final %>%
+  gt() %>%
+  tab_header(title = md("**Tabla 2x2: Estrés y Depresión**")) %>%
+  tab_spanner(
+    label = "Depresión",
+    columns = c(Alta, Baja, Total)
+  ) %>%
+  cols_align(
+    align = "center",
+    columns = everything()
+  ) %>%
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = cells_body(rows = Estrés == "Total")
+  )
+
+```
+### Column {width="55%"}
+
+```{r}
+#| echo: false
+#| #| fig-width: 9
+#| fig-height: 5
+
+tabla_plot <- as.data.frame(tabla_2x2)
+
+ggplot(tabla_plot, aes(x = Var2, y = Var1, fill = Freq)) +
+  geom_tile(color = "white", linewidth = 1.3) +
+  geom_text(
+    aes(label = Freq),
+    size = 8,
+    fontface = "bold",
+    color = "white"
+  ) +
+  labs(
+    title = "Mapa de calor de asociación",
+    x = "Depresión",
+    y = "Estrés académico",
+    fill = "Frecuencia"
+  ) +
+  theme_minimal(base_size = 16) +
+  theme(
+    plot.title = element_text(face = "bold", size = 18),
+    axis.title = element_text(face = "bold"),
+    panel.grid = element_blank()
+  )
+```
+
+
+## Row {height="55px"}
+
+```{=html}
+<div class="powerbi-section-title">
+2. Pruebas estadísticas
+</div>
+```
+
+## Row {height="300px"}
+
+```{r}
+#| echo: false
+#| results: asis
+
+chi <- chisq.test(tabla_2x2)
+
+chi_valor <- round(as.numeric(chi$statistic), 2)
+chi_gl <- as.numeric(chi$parameter)
+chi_p <- chi$p.value
+texto_p <- ifelse(chi_p < 0.001, "p < 0.001", paste0("p = ", round(chi_p, 3)))
+
+a <- tabla_2x2["Alto", "Alta"]
+b <- tabla_2x2["Alto", "Baja"]
+c <- tabla_2x2["Bajo", "Alta"]
+d <- tabla_2x2["Bajo", "Baja"]
+
+or_valor <- (a * d) / (b * c)
+se_log_or <- sqrt(1/a + 1/b + 1/c + 1/d)
+or_inf <- exp(log(or_valor) - 1.96 * se_log_or)
+or_sup <- exp(log(or_valor) + 1.96 * se_log_or)
+
+htmltools::HTML(paste0(
+"<div style='display:grid; grid-template-columns:1fr 1fr; gap:28px; width:100%; height:100%;'>",
+
+"<div style='background:white; border-radius:18px; padding:28px; box-shadow:0 3px 12px rgba(0,0,0,.08); border-left:8px solid #0057B8;'>",
+"<h3 style='margin-top:0;'>Prueba Chi-cuadrado</h3>",
+"<div style='font-size:42px; font-weight:800; color:#0057B8;'>χ² = ", chi_valor, "</div>",
+"<p style='font-size:18px;'>gl = ", chi_gl, "</p>",
+"<p style='font-size:22px; font-weight:700; color:#0057B8;'>", texto_p, "</p>",
+"<p style='color:#008060; font-weight:600;'>● Asociación estadísticamente significativa</p>",
+"</div>",
+
+"<div style='background:white; border-radius:18px; padding:28px; box-shadow:0 3px 12px rgba(0,0,0,.08); border-left:8px solid #00A86B;'>",
+"<h3 style='margin-top:0;'>Odds Ratio</h3>",
+"<div style='font-size:42px; font-weight:800; color:#0057B8;'>OR = ", round(or_valor, 2), "</div>",
+"<p style='font-size:18px;'>IC95%: ", round(or_inf, 2), " – ", round(or_sup, 2), "</p>",
+"<p style='font-weight:600;'>Los estudiantes con estrés alto presentan <strong>", round(or_valor, 2), " veces más probabilidades</strong> de depresión alta.</p>",
+"</div>",
+
+"</div>"
+))
+```
+
+## Row {height="55px"}
+
+```{=html}
+<div class="powerbi-section-title">
+3. Interpretación epidemiológica
+</div>
+```
+
+## Row {height="250px"}
+
+```{r}
+#| echo: false
+#| results: asis
+
+interpretacion <- glue::glue("
+
+<div style='
+background:#FFF8E6;
+border:1px solid #F3D48A;
+border-left:8px solid #F2B705;
+border-radius:18px;
+padding:28px 38px;
+width:100%;
+box-sizing:border-box;
+'>
+
+<h3 style='
+margin-top:0;
+margin-bottom:18px;
+color:#4B5563;
+font-size:32px;
+font-weight:700;
+'>
+Interpretación epidemiológica
+</h3>
+
+<p style='font-size:22px; line-height:1.75; margin:0;'>
+
+La prueba <strong>Chi-cuadrado</strong> muestra una
+<strong>asociación estadísticamente significativa</strong>
+entre el estrés académico y la depresión
+(<span style='color:#0057B8;font-weight:700;'>χ² = {chi_valor}</span>;
+<span style='color:#0057B8;font-weight:700;'>{texto_p}</span>).
+
+<br><br>
+
+El análisis mediante <strong>Odds Ratio</strong> indica que los estudiantes
+con niveles altos de estrés académico presentan aproximadamente
+
+<span style='
+color:#0057B8;
+font-size:28px;
+font-weight:800;
+'>
+{round(or_valor,2)} veces más probabilidades
+</span>
+
+de reportar depresión alta en comparación con aquellos que presentan niveles bajos de estrés.
+
+<br><br>
+
+<span style='
+background:#F3F4F6;
+padding:8px 14px;
+border-radius:10px;
+font-weight:600;
+color:#374151;
+display:inline-block;
+'>
+IC95%: {round(or_inf,2)} – {round(or_sup,2)}
+</span>
+
+</p>
+
+</div>
+
+")
+
+htmltools::HTML(interpretacion)
+```

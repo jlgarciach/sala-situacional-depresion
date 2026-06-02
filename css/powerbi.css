@@ -1,0 +1,293 @@
+/* =========================================================
+   ESTILO GENERAL DEL TAB POWER BI
+========================================================= */
+
+body {
+  background-color: #f4f5f7;
+  font-family: "Segoe UI", sans-serif;
+}
+
+
+/* =========================================================
+   MENÚ SUPERIOR FIJO
+========================================================= */
+
+.navbar {
+  position: sticky !important;
+  top: 0;
+  z-index: 9999;
+  background: white !important;
+  border-bottom: 1px solid #dcdcdc;
+}
+
+
+/* =========================================================
+   TARJETAS GENERALES
+========================================================= */
+
+.card,
+.quarto-dashboard-content .card {
+  border-radius: 14px !important;
+  border: 1px solid #E3E8EF !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,.05) !important;
+  transition: all .25s ease;
+  background: white;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0,0,0,.08) !important;
+}
+
+
+/* =========================================================
+   VALUEBOXES KPI
+========================================================= */
+
+.value-box {
+  border-radius: 18px !important;
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(0,0,0,.10);
+}
+
+.value-box-title {
+  font-size: 18px !important;
+  font-weight: 600 !important;
+}
+
+.value-box-value {
+  font-size: 54px !important;
+  font-weight: 700 !important;
+}
+
+
+/* =========================================================
+   TÍTULOS DE GRÁFICAS
+========================================================= */
+
+.card-title,
+h3 {
+  font-weight: 700 !important;
+  color: #374151 !important;
+}
+
+
+/* =========================================================
+   CONTENEDOR DEL INSIGHT
+========================================================= */
+
+.insight-box {
+  background: #eef5ff;
+  border-left: 6px solid #2563eb;
+  border-radius: 12px;
+  padding: 22px;
+}
+
+
+/* =========================================================
+   SCROLL SUAVE
+========================================================= */
+
+html {
+  scroll-behavior: smooth;
+}
+
+
+/* =========================================================
+   ESPACIADO ENTRE FILAS
+========================================================= */
+
+.quarto-dashboard-row {
+  margin-bottom: 18px;
+}
+
+
+/* =========================================================
+   PLOTLY
+========================================================= */
+
+.js-plotly-plot .plotly .modebar {
+  opacity: 0;
+  transition: opacity .2s ease;
+}
+
+.js-plotly-plot:hover .modebar {
+  opacity: 1;
+}
+
+
+/* =========================================================
+   TABLA FUTURA
+========================================================= */
+
+table {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1200px) {
+
+  .value-box-value {
+    font-size: 36px !important;
+  }
+
+  .value-box-title {
+    font-size: 15px !important;
+  }
+
+}
+
+.powerbi-section-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0b4ea2;
+  background: #eaf2ff;
+  border-left: 5px solid #2563eb;
+  padding: 10px 16px;
+  border-radius: 10px;
+  margin: 18px 0 10px 0;
+}
+
+/* =========================================================
+   TITULOS DE TARJETAS / GRAFICAS
+========================================================= */
+
+.card-title {
+  font-size: 17px !important;
+  font-weight: 700 !important;
+  color: #1f2937 !important;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+}
+
+
+/* =========================================================
+   TITULOS VALUE BOX
+========================================================= */
+
+.value-box-title {
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+
+/* =========================================================
+   CONTENEDORES DE GRAFICAS
+========================================================= */
+
+.plotly {
+  border-radius: 10px;
+}
+
+/* Títulos reales dentro de tarjetas Quarto */
+.quarto-dashboard .card h3,
+.quarto-dashboard .card h2 {
+  font-size: 17px !important;
+  font-weight: 700 !important;
+  color: #1f2937 !important;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+}
+
+/* =========================================================
+   TEXTO INTRODUCTORIO
+========================================================= */
+
+.quarto-dashboard p {
+  font-size: 15px;
+  line-height: 1.7;
+  color: #374151;
+}
+
+/* =========================================================
+   CORRECCIÓN TEXTO VALUE BOX
+========================================================= */
+
+.value-box,
+.value-box * {
+  color: white !important;
+}
+
+.value-box-title,
+.value-box-value {
+  color: white !important;
+}
+
+
+/* =========================================================
+   EFECTOS PREMIUM KPI
+========================================================= */
+
+.value-box {
+  transition: all 0.25s ease-in-out !important;
+  box-shadow:
+    0 4px 10px rgba(0,0,0,0.08),
+    0 1px 3px rgba(0,0,0,0.05) !important;
+}
+
+.value-box:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 10px 24px rgba(0,0,0,0.15),
+    0 4px 10px rgba(0,0,0,0.08) !important;
+}
+
+
+/* =========================================================
+   KPI MÁS ELEGANTES Y VISIBLES
+========================================================= */
+
+.value-box {
+  border-radius: 20px !important;
+  border: none !important;
+
+  min-height: 100px !important;
+  padding: 18px 22px !important;
+
+  box-shadow:
+    0 8px 22px rgba(0,0,0,0.16),
+    0 2px 6px rgba(0,0,0,0.08) !important;
+
+  transition: all 0.25s ease-in-out !important;
+}
+
+.value-box:hover {
+  transform: translateY(-4px);
+
+  box-shadow:
+    0 14px 28px rgba(0,0,0,0.18),
+    0 4px 10px rgba(0,0,0,0.08) !important;
+}
+
+.value-box .bi,
+.value-box svg {
+  opacity: 0.9 !important;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.25));
+}
+
+.value-box-value {
+  font-size: 38px !important;
+  font-weight: 800 !important;
+  line-height: 1.1;
+
+  text-shadow:
+    0 2px 5px rgba(0,0,0,0.25);
+}
+
+.value-box-title {
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+
+  text-shadow:
+    0 1px 3px rgba(0,0,0,0.25);
+}
+

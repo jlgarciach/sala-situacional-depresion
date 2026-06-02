@@ -1,0 +1,365 @@
+# Análisis temporal
+
+## Row {height=80px}
+
+Este módulo analiza la evolución temporal de los registros recolectados, permitiendo identificar días de mayor participación, variaciones en depresión alta, estrés alto y posibles periodos de mayor vulnerabilidad estudiantil.
+
+## Row {height=55px}
+
+```{=html}
+<div class="powerbi-section-title">
+1. Indicadores temporales principales
+</div>
+```
+
+## Row {height=140px}
+
+```{r}
+#| echo: false
+#| results: asis
+
+base_temporal <- base_compuestas %>%
+  mutate(
+    Fecha_temp = as.Date(Fecha)
+  ) %>%
+  filter(!is.na(Fecha_temp))
+
+total_formularios_temp <- nrow(base_temporal)
+fecha_inicial <- min(base_temporal$Fecha_temp)
+fecha_final <- max(base_temporal$Fecha_temp)
+
+dia_mas_registros <- base_temporal %>%
+  count(Fecha_temp, name = "registros") %>%
+  arrange(desc(registros)) %>%
+  slice(1)
+
+htmltools::HTML(glue::glue("
+<div style='
+display:grid;
+grid-template-columns:repeat(4, 1fr);
+gap:20px;
+width:100%;
+'>
+
+<div class='card' style='padding:24px; border-left:8px solid #0057B8;'>
+<h4>Total formularios</h4>
+<div style='font-size:38px; font-weight:800; color:#0057B8;'>{total_formularios_temp}</div>
+</div>
+
+<div class='card' style='padding:24px; border-left:8px solid #00A86B;'>
+<h4>Fecha inicial</h4>
+<div style='font-size:26px; font-weight:700;'>{fecha_inicial}</div>
+</div>
+
+<div class='card' style='padding:24px; border-left:8px solid #F2B705;'>
+<h4>Fecha final</h4>
+<div style='font-size:26px; font-weight:700;'>{fecha_final}</div>
+</div>
+
+<div class='card' style='padding:24px; border-left:8px solid #FF6B2C;'>
+<h4>Día con más registros</h4>
+<div style='font-size:24px; font-weight:700; margin-bottom:8px;'>{dia_mas_registros$Fecha_temp}</div>
+<div style='font-size:18px; color:#4B5563; font-weight:600;'>{dia_mas_registros$registros} formularios</div>
+</div>
+
+</div>
+"))
+```
+
+## Row {height=55px}
+
+```{=html}
+<div class="powerbi-section-title">
+2. Evolución de formularios recolectados
+</div>
+```
+
+## Row {height=380px}
+
+### Column {width="70%"}
+
+```{r}
+#| echo: false
+
+registros_dia <- base_temporal %>%
+  count(Fecha_temp, name = "formularios") %>%
+  arrange(Fecha_temp)
+
+ggplot(registros_dia, aes(x = Fecha_temp, y = formularios)) +
+  geom_line(linewidth = 1.4, color = "#0057B8") +
+  geom_point(size = 3, color = "#0057B8") +
+  geom_text(
+    aes(label = formularios),
+    vjust = -0.8,
+    size = 4,
+    fontface = "bold"
+  ) +
+  labs(
+    title = "Evolución de formularios recolectados por día",
+    x = "Fecha",
+    y = "No. de formularios"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(face = "bold", size = 18),
+    axis.title = element_text(face = "bold"),
+    panel.grid.minor = element_blank()
+  )
+```
+
+### Column {width="30%"}
+
+```{r}
+#| echo: false
+
+registros_dia %>%
+  mutate(Fecha = as.character(Fecha_temp)) %>%
+  select(Fecha, Formularios = formularios) %>%
+  gt() %>%
+  tab_header(
+    title = md("**Resumen por fecha**")
+  ) %>%
+  cols_align(
+    align = "center",
+    columns = everything()
+  )
+```
+
+## Row {height=55px}
+
+```{=html}
+<div class="powerbi-section-title">
+3. Evolución temporal de depresión alta
+</div>
+```
+
+## Row {height=380px}
+
+### Column {width="70%"}
+
+```{r}
+#| echo: false
+
+depresion_dia <- base_temporal %>%
+  group_by(Fecha_temp) %>%
+  summarise(
+    Depresion_alta = sum(clasificacion_depresion == "Alta", na.rm = TRUE),
+    Total = n(),
+    Porcentaje = round((Depresion_alta / Total) * 100, 1),
+    .groups = "drop"
+  )
+
+ggplot(depresion_dia, aes(x = Fecha_temp, y = Depresion_alta)) +
+  geom_line(linewidth = 1.4, color = "#F5223B") +
+  geom_point(size = 3, color = "#F5223B") +
+  geom_text(
+    aes(label = Depresion_alta),
+    vjust = -0.8,
+    size = 4,
+    fontface = "bold"
+  ) +
+  labs(
+    title = "Evolución de casos con depresión alta por día",
+    x = "Fecha",
+    y = "Casos con depresión alta"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(face = "bold", size = 18),
+    axis.title = element_text(face = "bold"),
+    panel.grid.minor = element_blank()
+  )
+```
+
+### Column {width="30%"}
+
+```{r}
+#| echo: false
+
+depresion_dia %>%
+  mutate(Fecha = as.character(Fecha_temp)) %>%
+  select(
+    Fecha,
+    `Depresión alta` = Depresion_alta,
+    Total,
+    `% Alta` = Porcentaje
+  ) %>%
+  gt() %>%
+  tab_header(
+    title = md("**Depresión alta por fecha**")
+  ) %>%
+  cols_align(
+    align = "center",
+    columns = everything()
+  )
+```
+
+## Row {height=55px}
+
+```{=html}
+<div class="powerbi-section-title">
+4. Evolución temporal de estrés alto
+</div>
+```
+
+## Row {height=380px}
+
+### Column {width="70%"}
+
+```{r}
+#| echo: false
+
+estres_dia <- base_temporal %>%
+  group_by(Fecha_temp) %>%
+  summarise(
+    Estres_alto = sum(clasificacion_estres == "Alto", na.rm = TRUE),
+    Total = n(),
+    Porcentaje = round((Estres_alto / Total) * 100, 1),
+    .groups = "drop"
+  )
+
+ggplot(estres_dia, aes(x = Fecha_temp, y = Estres_alto)) +
+  geom_line(linewidth = 1.4, color = "#FF6B2C") +
+  geom_point(size = 3, color = "#FF6B2C") +
+  geom_text(
+    aes(label = Estres_alto),
+    vjust = -0.8,
+    size = 4,
+    fontface = "bold"
+  ) +
+  labs(
+    title = "Evolución de casos con estrés alto por día",
+    x = "Fecha",
+    y = "Casos con estrés alto"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(face = "bold", size = 18),
+    axis.title = element_text(face = "bold"),
+    panel.grid.minor = element_blank()
+  )
+```
+
+### Column {width="30%"}
+
+```{r}
+#| echo: false
+
+estres_dia %>%
+  mutate(Fecha = as.character(Fecha_temp)) %>%
+  select(
+    Fecha,
+    `Estrés alto` = Estres_alto,
+    Total,
+    `% Alto` = Porcentaje
+  ) %>%
+  gt() %>%
+  tab_header(
+    title = md("**Estrés alto por fecha**")
+  ) %>%
+  cols_align(
+    align = "center",
+    columns = everything()
+  )
+```
+
+## Row {height=55px}
+
+```{=html}
+<div class="powerbi-section-title">
+5. Comparación temporal: depresión alta y estrés alto
+</div>
+```
+
+## Row {height=380px}
+
+### Column {width="70%"}
+
+```{r}
+#| echo: false
+
+comparacion_dia <- base_temporal %>%
+  group_by(Fecha_temp) %>%
+  summarise(
+    Depresion_alta = sum(clasificacion_depresion == "Alta", na.rm = TRUE),
+    Estres_alto = sum(clasificacion_estres == "Alto", na.rm = TRUE),
+    Total = n(),
+    .groups = "drop"
+  )
+
+comparacion_larga <- comparacion_dia %>%
+  tidyr::pivot_longer(
+    cols = c(Depresion_alta, Estres_alto),
+    names_to = "Indicador",
+    values_to = "Casos"
+  ) %>%
+  mutate(
+    Indicador = case_when(
+      Indicador == "Depresion_alta" ~ "Depresión alta",
+      Indicador == "Estres_alto" ~ "Estrés alto",
+      TRUE ~ Indicador
+    )
+  )
+
+ggplot(comparacion_larga, aes(x = Fecha_temp, y = Casos, color = Indicador, group = Indicador)) +
+  geom_line(linewidth = 1.4) +
+  geom_point(size = 3) +
+  geom_text(
+    aes(label = Casos),
+    vjust = -0.8,
+    size = 4,
+    fontface = "bold",
+    show.legend = FALSE
+  ) +
+  scale_color_manual(
+    values = c(
+      "Depresión alta" = "#F5223B",
+      "Estrés alto" = "#FF6B2C"
+    )
+  ) +
+  labs(
+    title = "Comparación temporal: depresión alta y estrés alto",
+    x = "Fecha",
+    y = "Casos",
+    color = "Indicador"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(face = "bold", size = 18),
+    axis.title = element_text(face = "bold"),
+    legend.position = "bottom",
+    panel.grid.minor = element_blank()
+  )
+```
+
+### Column {width="30%"}
+
+```{r}
+#| echo: false
+
+comparacion_dia %>%
+  mutate(Fecha = as.character(Fecha_temp)) %>%
+  select(
+    Fecha,
+    `Depresión alta` = Depresion_alta,
+    `Estrés alto` = Estres_alto,
+    Total
+  ) %>%
+  gt() %>%
+  tab_header(
+    title = md("**Resumen comparativo por fecha**")
+  ) %>%
+  cols_align(
+    align = "center",
+    columns = everything()
+  )
+```
+
+## Row {height=160px}
+
+```{=html}
+<div class="insight-box">
+💡 <strong>Insight temporal:</strong><br>
+El análisis temporal permite identificar los días o periodos con mayor concentración de registros y observar si los niveles de depresión alta y estrés alto presentan patrones similares a lo largo del tiempo.
+</div>
+```

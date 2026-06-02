@@ -1,0 +1,131 @@
+### Análisis de resultados
+
+---
+
+#### Síntomas depresivos
+
+---
+
+**P8. Poco interés o placer en hacer cosas**
+
+Los resultados muestran que el 39.5% de los estudiantes manifestó haber presentado poco interés o placer en realizar actividades durante varios días, mientras que el 15.2% indicó experimentar esta situación más de la mitad de los días y el 11.7% casi todos los días. Por otro lado, el 33.7% señaló no haber presentado este síntoma. Estos hallazgos reflejan que una proporción considerable de estudiantes ha experimentado disminución del interés en sus actividades cotidianas, lo cual puede relacionarse con agotamiento emocional, estrés académico o dificultades en el bienestar mental. La presencia de este síntoma en más de la mitad de la población estudiada evidencia la importancia de fortalecer acciones de apoyo emocional dentro del entorno universitario.
+
+------------------------------------------------------------------------
+
+**P9. Sentirse triste, deprimido o desesperanzado**
+
+Se observó que el 41.7% de los participantes manifestó sentirse triste, deprimido o desesperanzado durante varios días, mientras que el 17.2% reportó presentar este estado emocional más de la mitad de los días y el 15.2% casi todos los días. Únicamente el 25.9% indicó no haber experimentado estos sentimientos. Los resultados sugieren una presencia importante de alteraciones emocionales en la población estudiada. La frecuencia elevada de estudiantes que reportan tristeza o desesperanza puede asociarse con factores académicos, personales y sociales que afectan el bienestar psicológico. Esto evidencia la necesidad de promover programas de salud mental y acompañamiento psicológico dirigidos a estudiantes universitarios.
+
+---
+
+#### Factores académicos
+
+---
+
+***P10. Horas promedio de estudio fuera del horario de clases**
+
+El 49.8% de los estudiantes indicó dedicar entre 2 y 4 horas diarias al estudio fuera del horario de clases, seguido del 34.0% que estudia menos de 2 horas al día. En menor proporción, el 12.9% manifestó estudiar entre 5 y 7 horas y únicamente el 3.2% más de 7 horas diarias.
+
+Estos resultados muestran que la mayoría de estudiantes dedica tiempo adicional a sus actividades académicas fuera de clases, lo cual puede reflejar compromiso académico y exigencias universitarias importantes. Sin embargo, las jornadas prolongadas de estudio también podrían relacionarse con cansancio físico y emocional, especialmente cuando no existe un equilibrio adecuado entre actividades académicas, descanso y recreación.
+
+---
+
+**P11. Percepción de sobrecarga académica**
+
+El 51.8% de los estudiantes consideró que presenta sobrecarga académica, mientras que el 48.2% manifestó no percibirla.
+La diferencia observada entre ambos grupos es mínima; sin embargo, más de la mitad de los participantes percibe una elevada carga académica. Esta situación puede influir negativamente en el bienestar emocional, el rendimiento académico y la calidad de vida de los estudiantes, especialmente en contextos universitarios con alta demanda de tareas, evaluaciones y responsabilidades académicas.
+
+---
+
+**P12. Horas al día utilizando redes sociales**
+
+El 31.4% de los participantes reportó utilizar redes sociales entre 1 y 2 horas al día. Asimismo, el 23.0% indicó usarlas menos de una hora y el mismo porcentaje manifestó utilizarlas más de 3 horas diarias. Finalmente, el 22.7% señaló emplear entre 2 y 3 horas al día en estas plataformas.
+
+Los resultados evidencian que el uso de redes sociales forma parte importante de la rutina diaria de los estudiantes universitarios. Aunque el uso moderado puede favorecer la comunicación y el entretenimiento, el tiempo prolongado en redes sociales podría influir en hábitos de sueño, concentración académica y bienestar emocional, especialmente cuando existe un uso excesivo.
+
+---
+
+***P13. Horas promedio de sueño**
+
+El 44.0% de los estudiantes indicó dormir entre 5 y 6 horas diarias, mientras que el 27.2% reportó dormir menos de 5 horas. Por otro lado, el 25.9% manifestó dormir entre 7 y 8 horas y únicamente el 2.9% más de 8 horas.
+
+Estos resultados muestran que una parte importante de los participantes presenta hábitos de sueño limitados, ya que la mayoría duerme menos de las horas recomendadas para adultos jóvenes.
+
+La disminución del tiempo de descanso puede relacionarse con fatiga, dificultades de concentración, estrés y afectación del bienestar emocional.
+
+---
+
+#### Otros facores asociados
+
+---
+
+**P14. Frecuencia de consumo de alcohol**
+
+El 84.1% de los estudiantes indicó no consumir alcohol, mientras que el 12.0% reportó consumirlo entre 1 y 2 veces al mes. En menor proporción, el 2.3% manifestó consumir alcohol 3 o más veces por semana y el 1.6% entre 1 y 2 veces por semana.
+
+Los resultados reflejan que la mayoría de participantes no presenta consumo habitual de alcohol. Sin embargo, existe un pequeño grupo que reporta consumo frecuente, situación que puede constituir un factor de riesgo para problemas de salud física, emocional y académica si no se controla adecuadamente.
+
+---
+
+**P15. Búsqueda de ayuda psicológica en el último año**
+
+El 87.4% de los estudiantes indicó no haber buscado ayuda psicológica durante el último año, mientras que únicamente el 12.6% manifestó haber recibido apoyo psicológico.
+
+Estos resultados sugieren una baja utilización de servicios de atención psicológica por parte de los estudiantes universitarios. Esta situación podría relacionarse con barreras como falta de acceso, desconocimiento de los servicios disponibles, temor al estigma o percepción de no necesitar ayuda profesional. Considerando la presencia de síntomas emocionales observados en preguntas anteriores, resulta importante fortalecer estrategias de orientación y promoción de la salud mental dentro de las instituciones educativas.
+
+---
+
+**P16. Jornada de estudio**
+
+Los resultados muestran que el 81.6% de los estudiantes pertenece a la jornada de fin de semana, mientras que el 9.7% estudia en jornada matutina, el 5.2% en jornada vespertina y el 3.6% en jornada nocturna.
+
+Estos hallazgos evidencian un claro predominio de estudiantes que cursan estudios durante fines de semana, situación que podría relacionarse con responsabilidades laborales o personales entre semana. Este tipo de modalidad académica suele ser frecuente en estudiantes que buscan compatibilizar sus estudios con actividades laborales, familiares u otras obligaciones, lo que puede influir en los niveles de cansancio, estrés y disponibilidad de tiempo para el descanso.
+
+---
+
+**P17. Trabaja además de estudiar**
+El 62.8% de los participantes indicó que trabaja además de estudiar, mientras que el 37.2% señaló dedicarse únicamente a sus actividades académicas.
+Los resultados reflejan que una proporción importante de estudiantes mantiene simultáneamente responsabilidades laborales y académicas. Esta situación puede representar una mayor carga física y emocional, debido a las exigencias de cumplir horarios laborales, actividades académicas y responsabilidades personales. Asimismo, combinar trabajo y estudio puede influir en el tiempo disponible para el descanso, recreación y autocuidado.
+
+---
+
+#### Estrés académico
+
+---
+
+**P18. Se ha sentido estresado por sus estudios**
+El 46.3% de los estudiantes manifestó haberse sentido estresado por sus estudios durante varios días, mientras que el 18.8% indicó sentirse estresado casi todos los días y el 15.9% más de la mitad de los días. Por otro lado, únicamente el 17.8% señaló no haber experimentado estrés relacionado con sus estudios.
+Estos resultados evidencian una presencia importante de estrés académico en la población estudiada. La frecuencia elevada de estudiantes que reportan estrés puede relacionarse con la carga académica, presión por el rendimiento, acumulación de tareas y dificultades para equilibrar las responsabilidades personales y universitarias. La persistencia de estas condiciones podría afectar el bienestar emocional y el desempeño académico de los estudiantes.
+
+---
+
+**P19. Ha sentido presión por tareas, exámenes o entregas**
+
+El 46.0% de los participantes indicó haber sentido presión por tareas, exámenes o entregas durante varios días. Además, el 20.7% manifestó experimentar esta presión casi todos los días y el 14.9% más de la mitad de los días. En contraste, el 17.2% señaló no haber sentido este tipo de presión académica.
+
+Los resultados reflejan que la presión académica constituye una experiencia frecuente entre los estudiantes universitarios. Las exigencias relacionadas con evaluaciones, cumplimiento de tareas y fechas de entrega pueden generar tensión emocional y afectar el equilibrio personal.
+
+Esta situación evidencia la importancia de promover estrategias de organización académica, manejo del estrés y acompañamiento estudiantil dentro de las instituciones educativas.
+
+---
+
+**P20. Ha sentido que no tiene suficiente tiempo para cumplir con sus responsabilidades académicas**
+
+El 41.7% de los estudiantes manifestó sentir, durante varios días, que no dispone de suficiente tiempo para cumplir con sus responsabilidades académicas. Asimismo, el 17.5% indicó experimentar esta situación casi todos los días y el 13.9% más de la mitad de los días. Por otro lado, el 25.6% señaló no presentar esta dificultad.
+
+Estos hallazgos muestran que una proporción considerable de estudiantes percibe limitaciones en el manejo de su tiempo académico. La sensación de insuficiencia de tiempo puede estar asociada con múltiples responsabilidades, jornadas laborales, sobrecarga académica y dificultades para equilibrar actividades personales y universitarias. Esta situación podría generar agotamiento y afectar el bienestar integral del estudiante.
+
+---
+
+**P21. Le ha costado concentrarse debido a preocupaciones académicas**
+
+El 44.7% de los participantes indicó haber tenido dificultades para concentrarse debido a preocupaciones académicas durante varios días. Además, el 18.8% manifestó experimentar esta situación casi todos los días y el 15.2% más de la mitad de los días. 
+
+En contraste, el 20.1% señaló no presentar dificultades de concentración relacionadas con preocupaciones académicas.
+Los resultados sugieren que las preocupaciones académicas influyen de manera importante en la capacidad de concentración de los estudiantes. Las dificultades para mantener la atención pueden afectar el rendimiento académico, la comprensión de contenidos y el bienestar emocional. Asimismo, estos hallazgos reflejan la necesidad de fortalecer acciones orientadas al manejo del estrés y promoción de la salud mental en el ámbito universitario.
+
+---
+
+**P22. Cuenta con apoyo familiar o social cuando se siente sobrecargado**
+El 54.0% de los estudiantes indicó contar con apoyo familiar o social cuando se siente sobrecargado, mientras que el 46.0% manifestó no disponer de este tipo de apoyo.
+Los resultados evidencian que, aunque más de la mitad de los participantes percibe apoyo emocional o social, existe un porcentaje importante de estudiantes que no cuenta con redes de apoyo en momentos de sobrecarga emocional o académica. La ausencia de apoyo familiar o social puede incrementar la vulnerabilidad frente al estrés y afectar el bienestar psicológico de los estudiantes. Por ello, resulta importante fortalecer espacios de acompañamiento y apoyo dentro de la comunidad universitaria.

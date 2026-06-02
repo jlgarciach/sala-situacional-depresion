@@ -1,0 +1,180 @@
+# Distribución geográfica
+
+## Row {height="80px"}
+
+Este módulo permite visualizar la distribución territorial de los formularios recolectados, identificando los departamentos con mayor participación dentro del estudio.
+
+## Row {height="55px"}
+
+```{=html}
+<div class="powerbi-section-title">
+1. Distribución de formularios por departamento
+</div>
+```
+
+## Row {height="420px"}
+
+### Column {width="65%"}
+
+```{r}
+#| echo: false
+
+library(sf)
+library(geodata)
+
+mapa_gt <- geodata::gadm(
+  country = "GTM",
+  level = 1,
+  path = "data"
+) %>%
+  st_as_sf()
+
+conteo_departamento <- base_compuestas %>%
+  count(Departamento, name = "formularios")
+
+mapa_gt_datos <- mapa_gt %>%
+  left_join(
+    conteo_departamento,
+    by = c("NAME_1" = "Departamento")
+  ) %>%
+  mutate(
+    formularios = ifelse(is.na(formularios), 0, formularios)
+  )
+
+ggplot(mapa_gt_datos) +
+  geom_sf(aes(fill = formularios), color = "white", linewidth = 0.4) +
+  scale_fill_gradient(
+    low = "#D9ECFF",
+    high = "#0057B8",
+    name = "Formularios"
+  ) +
+  labs(
+    title = "Distribución geográfica de formularios por departamento"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(face = "bold", size = 18),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    panel.grid = element_blank()
+  )
+
+```
+
+### Column {width="35%"}
+
+```{r}
+#| echo: false
+
+conteo_departamento %>%
+  arrange(desc(formularios)) %>%
+  gt() %>%
+  tab_header(
+    title = md("**Formularios por departamento**")
+  ) %>%
+  cols_align(
+    align = "center",
+    columns = everything()
+  )
+```
+
+## Row {height="55px"}
+
+```{=html}
+<div class="powerbi-section-title">
+2. Indicadores geográficos
+</div>
+```
+
+## Row {height="140px"}
+
+```{r}
+#| echo: false
+#| results: asis
+
+indicadores_geo <- base_compuestas %>%
+  filter(!is.na(Departamento), Departamento != "") %>%
+  group_by(Departamento) %>%
+  summarise(
+    formularios = n(),
+    depresion_alta = sum(clasificacion_depresion == "Alta", na.rm = TRUE),
+    estres_alto = sum(clasificacion_estres == "Alto", na.rm = TRUE),
+    .groups = "drop"
+  )
+
+total_deptos <- n_distinct(indicadores_geo$Departamento)
+
+depto_mas_registros <- indicadores_geo %>%
+  arrange(desc(formularios)) %>%
+  slice(1)
+
+depto_mas_depresion <- indicadores_geo %>%
+  arrange(desc(depresion_alta)) %>%
+  slice(1)
+
+depto_mas_estres <- indicadores_geo %>%
+  arrange(desc(estres_alto)) %>%
+  slice(1)
+
+htmltools::HTML(glue::glue("
+<div style='display:grid; grid-template-columns:repeat(4, 1fr); gap:20px; width:100%;'>
+
+<div class='card' style='padding:24px; border-left:8px solid #0057B8;'>
+<h4>Departamentos representados</h4>
+<div style='font-size:36px; font-weight:800; color:#0057B8;'>{total_deptos}</div>
+</div>
+
+<div class='card' style='padding:24px; border-left:8px solid #00A86B;'>
+<h4>Más registros</h4>
+<div style='font-size:24px; font-weight:700;'>{depto_mas_registros$Departamento}</div>
+<p style='margin:0; color:#4B5563; font-weight:600;'>{depto_mas_registros$formularios} formularios</p>
+</div>
+
+<div class='card' style='padding:24px; border-left:8px solid #F5223B;'>
+<h4>Más depresión alta</h4>
+<div style='font-size:24px; font-weight:700;'>{depto_mas_depresion$Departamento}</div>
+<p style='margin:0; color:#4B5563; font-weight:600;'>{depto_mas_depresion$depresion_alta} casos</p>
+</div>
+
+<div class='card' style='padding:24px; border-left:8px solid #FF6B2C;'>
+<h4>Más estrés alto</h4>
+<div style='font-size:24px; font-weight:700;'>{depto_mas_estres$Departamento}</div>
+<p style='margin:0; color:#4B5563; font-weight:600;'>{depto_mas_estres$estres_alto} casos</p>
+</div>
+
+</div>
+"))
+```
+
+## Row {height=180px}
+
+```{r}
+#| echo: false
+#| results: asis
+
+nom_registros <- as.character(depto_mas_registros$Departamento)
+n_registros   <- depto_mas_registros$formularios
+
+nom_dep <- as.character(depto_mas_depresion$Departamento)
+n_dep   <- depto_mas_depresion$depresion_alta
+
+nom_estres <- as.character(depto_mas_estres$Departamento)
+n_estres   <- depto_mas_estres$estres_alto
+
+texto_insight_geo <- glue::glue("
+<div class='insight-box'>
+
+💡 <strong>Insight geográfico:</strong><br><br>
+
+<p style='font-size:18px; line-height:1.8; margin:0;'>
+
+<strong>{nom_registros}</strong> constituye el principal territorio de análisis del estudio, concentrando la mayor cantidad de formularios recolectados (<strong>{n_registros}</strong> registros). Además, <strong>{nom_dep}</strong> presenta el mayor número de casos clasificados con <strong>depresión alta</strong> (<strong>{n_dep}</strong> casos), mientras que <strong>{nom_estres}</strong> concentra el mayor número de casos con <strong>estrés alto</strong> (<strong>{n_estres}</strong> casos). Esta distribución evidencia una participación territorial heterogénea, aspecto que debe considerarse al interpretar los resultados epidemiológicos generales del estudio.
+
+</p>
+
+</div>
+")
+
+htmltools::HTML(texto_insight_geo)
+
+```

@@ -1,0 +1,482 @@
+# Gráficas tipo Power BI
+
+```{r}
+# ==================================================
+# Paleta de colores estilo Power BI
+# ==================================================
+
+color_bajo  <- "#4CAF50"
+color_alto  <- "#F97316"
+color_azul  <- "#2F80D1"
+color_rojo  <- "#F5223B"
+color_gris  <- "#64748B"
+
+paleta_clasificacion <- c(
+  "Baja" = color_bajo,
+  "Alta" = color_alto,
+  "Bajo" = color_bajo,
+  "Alto" = color_alto
+)
+```
+
+## Row {height="60px"}
+
+Este módulo presenta un resumen visual de los principales indicadores relacionados con síntomas depresivos, estrés académico y factores asociados en estudiantes universitarios. Las gráficas permiten identificar patrones generales y posibles grupos prioritarios para análisis posterior.
+
+## Row
+
+### Indicadores principales
+
+```{=html}
+<div class="powerbi-section-title">
+1. Indicadores principales
+</div>
+```
+
+```{r}
+# ==================================================
+# Base para gráficas tipo Power BI
+# ==================================================
+
+base_graficas <- DB_Depresion_label %>%
+  mutate(
+    # ------------------------------
+    # Puntaje de depresión: p8 + p9
+    # ------------------------------
+    p8_num = case_when(
+      p8 == "Nunca" ~ 0,
+      p8 == "Varios días" ~ 1,
+      p8 == "Más de la mitad de los días" ~ 2,
+      p8 == "Casi todos los días" ~ 3,
+      TRUE ~ NA_real_
+    ),
+    p9_num = case_when(
+      p9 == "Nunca" ~ 0,
+      p9 == "Varios días" ~ 1,
+      p9 == "Más de la mitad de los días" ~ 2,
+      p9 == "Casi todos los días" ~ 3,
+      TRUE ~ NA_real_
+    ),
+    total_depresion = p8_num + p9_num,
+    clasificacion_depresion = case_when(
+      total_depresion >= 3 ~ "Alta",
+      total_depresion < 3 ~ "Baja",
+      TRUE ~ NA_character_
+    ),
+
+    # ------------------------------
+    # Puntaje de estrés: p18 + p19 + p20 + p21
+    # ------------------------------
+    p18_num = case_when(
+      p18 %in% c("nunca", "Nunca") ~ 0,
+      p18 %in% c("varios_dias", "Varios días") ~ 1,
+      p18 %in% c("mas_de_la_mitad", "Más de la mitad de los días") ~ 2,
+      p18 %in% c("casi_todos_los_dias", "Casi todos los días") ~ 3,
+      TRUE ~ NA_real_
+    ),
+    p19_num = case_when(
+      p19 %in% c("nunca", "Nunca") ~ 0,
+      p19 %in% c("varios_dias", "Varios días") ~ 1,
+      p19 %in% c("mas_de_la_mitad", "Más de la mitad de los días") ~ 2,
+      p19 %in% c("casi_todos_los_dias", "Casi todos los días") ~ 3,
+      TRUE ~ NA_real_
+    ),
+    p20_num = case_when(
+      p20 %in% c("nunca", "Nunca") ~ 0,
+      p20 %in% c("varios_dias", "Varios días") ~ 1,
+      p20 %in% c("mas_de_la_mitad", "Más de la mitad de los días") ~ 2,
+      p20 %in% c("casi_todos_los_dias", "Casi todos los días") ~ 3,
+      TRUE ~ NA_real_
+    ),
+    p21_num = case_when(
+      p21 %in% c("nunca", "Nunca") ~ 0,
+      p21 %in% c("varios_dias", "Varios días") ~ 1,
+      p21 %in% c("mas_de_la_mitad", "Más de la mitad de los días") ~ 2,
+      p21 %in% c("casi_todos_los_dias", "Casi todos los días") ~ 3,
+      TRUE ~ NA_real_
+    ),
+    total_estres = p18_num + p19_num + p20_num + p21_num,
+    clasificacion_estres = case_when(
+      total_estres >= 8 ~ "Alto",
+      total_estres < 8 ~ "Bajo",
+      TRUE ~ NA_character_
+    )
+  )
+
+# ==================================================
+# Indicadores principales
+# ==================================================
+
+total_estudiantes <- nrow(base_graficas)
+
+depresion_alta <- round(
+  mean(base_graficas$clasificacion_depresion == "Alta", na.rm = TRUE) * 100,
+  1
+)
+
+estres_alto <- round(
+  mean(base_graficas$clasificacion_estres == "Alto", na.rm = TRUE) * 100,
+  1
+)
+
+promedio_depresion <- round(
+  mean(base_graficas$total_depresion, na.rm = TRUE),
+  1
+)
+
+promedio_estres <- round(
+  mean(base_graficas$total_estres, na.rm = TRUE),
+  1
+)
+```
+
+## Row {height="90px"}
+
+### Total estudiantes
+
+```{r}
+value_box(
+  title = "Total estudiantes",
+  value = total_estudiantes,
+  showcase = bsicons::bs_icon("people-fill"),
+  theme = "primary"
+)
+```
+
+### Depresión alta
+
+```{r}
+value_box(
+  title = "Depresión alta",
+  value = paste0(depresion_alta, "%"),
+  showcase = bsicons::bs_icon("emoji-frown"),
+  theme = "danger"
+)
+```
+
+### Estrés alto
+
+```{r}
+value_box(
+  title = "Estrés alto",
+  value = paste0(estres_alto, "%"),
+  showcase = bsicons::bs_icon("exclamation-triangle"),
+  theme = "warning"
+)
+```
+
+### Promedio depresión
+
+```{r}
+value_box(
+  title = "Promedio depresión",
+  value = promedio_depresion,
+  showcase = bsicons::bs_icon("clipboard2-pulse"),
+  theme = "secondary"
+)
+```
+
+### Promedio estrés
+
+```{r}
+value_box(
+  title = "Promedio estrés",
+  value = promedio_estres,
+  showcase = bsicons::bs_icon("activity"),
+  theme = "success"
+)
+```
+
+## Row {height="55px"}
+
+### Sección salud mental
+
+```{=html}
+<div class="powerbi-section-title">
+2. Indicadores principales de salud mental
+</div>
+```
+
+## Row {height="360px"}
+
+### Distribución de depresión
+
+```{r}
+base_graficas %>%
+  count(clasificacion_depresion) %>%
+  plotly::plot_ly(
+    x = ~clasificacion_depresion,
+    y = ~n,
+    type = "bar",
+    text = ~n,
+    textposition = "inside",
+    marker = list(color = color_azul)
+  ) %>%
+  plotly::layout(
+    title = list(
+      text = "Clasificación de depresión",
+      font = list(size = 18, color = "#1f2937")
+    ),
+    xaxis = list(title = ""),
+    yaxis = list(title = "Frecuencia"),
+    margin = list(l = 60, r = 30, t = 60, b = 50),
+    paper_bgcolor = "white",
+    plot_bgcolor = "white"
+  )
+```
+
+### Distribución de estrés
+
+```{r}
+base_graficas %>%
+  count(clasificacion_estres) %>%
+  plotly::plot_ly(
+    labels = ~clasificacion_estres,
+    values = ~n,
+    type = "pie",
+    hole = 0.68
+  ) %>%
+  plotly::layout(
+    title = "Clasificación de estrés",
+    showlegend = TRUE
+  )
+```
+
+## Row {height="55px"}
+
+### Sección Factores asociados
+
+```{=html}
+<div class="powerbi-section-title">
+3. Factores académicos
+</div>
+```
+
+## Row {height="360px"}
+
+### Distribución de horas de sueño
+
+```{r}
+base_graficas %>%
+  count(p13) %>%
+  arrange(n) %>%
+  plotly::plot_ly(
+    x = ~n,
+    y = ~p13,
+    type = "bar",
+    orientation = "h",
+    text = ~n,
+    textposition = "auto"
+  ) %>%
+  plotly::layout(
+    title = "Horas promedio de sueño",
+    xaxis = list(title = "Frecuencia"),
+    yaxis = list(title = ""),
+    margin = list(l = 120, r = 20, t = 60, b = 50)
+  )
+```
+
+### Distribución de uso diario de redes sociales
+
+```{r}
+base_graficas %>%
+  count(p12) %>%
+  plotly::plot_ly(
+    labels = ~p12,
+    values = ~n,
+    type = "pie",
+    hole = 0.55,
+    textinfo = "percent"
+  ) %>%
+  plotly::layout(
+    title = "Uso diario de redes sociales",
+    showlegend = TRUE,
+    margin = list(l = 20, r = 20, t = 60, b = 20)
+  )
+```
+
+### Distribución de horas de estudio fuera de clases
+
+```{r}
+base_graficas %>%
+  count(p10) %>%
+  arrange(n) %>%
+  plotly::plot_ly(
+    x = ~n,
+    y = ~p10,
+    type = "bar",
+    orientation = "h",
+    text = ~n,
+    textposition = "auto"
+  ) %>%
+  plotly::layout(
+    title = "Horas de estudio fuera de clases",
+    xaxis = list(title = "Frecuencia"),
+    yaxis = list(title = ""),
+    margin = list(l = 130, r = 20, t = 60, b = 50)
+  )
+```
+
+## Row {height="55px"}
+
+### Sección de otros factores asociados
+
+```{=html}
+<div class="powerbi-section-title">
+4. Otros factores asociados
+</div>
+```
+
+## Row {height="360px"}
+
+### Consumo de alcohol
+
+```{r}
+base_graficas %>%
+  count(p14) %>%
+  arrange(n) %>%
+  plotly::plot_ly(
+    x = ~n,
+    y = ~p14,
+    type = "bar",
+    orientation = "h",
+    text = ~n,
+    textposition = "auto"
+  ) %>%
+  plotly::layout(
+    title = "Frecuencia de consumo de alcohol",
+    xaxis = list(title = "Frecuencia"),
+    yaxis = list(title = ""),
+    margin = list(l = 150, r = 20, t = 60, b = 50)
+  )
+```
+
+### Ayuda psicológica
+
+```{r}
+base_graficas %>%
+  count(p15) %>%
+  plotly::plot_ly(
+    labels = ~p15,
+    values = ~n,
+    type = "pie",
+    hole = 0.55,
+    textinfo = "percent"
+  ) %>%
+  plotly::layout(
+    title = "Búsqueda de ayuda psicológica",
+    showlegend = TRUE,
+    margin = list(l = 20, r = 20, t = 60, b = 20)
+  )
+```
+
+### Trabaja además de estudiar
+
+```{r}
+base_graficas %>%
+  count(p17) %>%
+  plotly::plot_ly(
+    labels = ~p17,
+    values = ~n,
+    type = "pie",
+    hole = 0.55,
+    textinfo = "percent"
+  ) %>%
+  plotly::layout(
+    title = "Trabaja además de estudiar",
+    showlegend = TRUE,
+    margin = list(l = 20, r = 20, t = 60, b = 20)
+  )
+```
+
+## Row {height="55px"}
+
+### Sección de análisis cruzados
+
+```{=html}
+<div class="powerbi-section-title">
+5. Análisis cruzados
+</div>
+```
+
+## Row {height="400px"}
+
+### Depresión por sexo
+
+```{r}
+base_graficas %>%
+  count(Sexo, clasificacion_depresion) %>%
+  group_by(Sexo) %>%
+  mutate(porcentaje = round(n / sum(n) * 100, 1)) %>%
+  plotly::plot_ly(
+    x = ~Sexo,
+    y = ~porcentaje,
+    color = ~clasificacion_depresion,
+    colors = c("Baja" = color_azul, "Alta" = color_alto),
+    type = "bar",
+    text = ~paste0(porcentaje, "%"),
+    textposition = "inside"
+  ) %>%
+  plotly::layout(
+    title = "Depresión por sexo",
+    xaxis = list(title = ""),
+    yaxis = list(title = "Porcentaje (%)"),
+    barmode = "stack"
+  )
+```
+
+### Estrés por horas de sueño
+
+```{r}
+base_graficas %>%
+  count(p13, clasificacion_estres) %>%
+  group_by(p13) %>%
+  mutate(porcentaje = round(n / sum(n) * 100, 1)) %>%
+  plotly::plot_ly(
+    x = ~p13,
+    y = ~porcentaje,
+    color = ~clasificacion_estres,
+    colors = c("Bajo" = color_azul, "Alto" = color_alto),
+    type = "bar",
+    text = ~paste0(porcentaje, "%"),
+    textposition = "inside"
+  ) %>%
+  plotly::layout(
+    title = "Estrés por horas de sueño",
+    xaxis = list(title = ""),
+    yaxis = list(title = "Porcentaje (%)"),
+    barmode = "stack"
+  )
+```
+
+## Row {height="180px"}
+
+### Insight epidemiológico automático
+
+```{r}
+insight_texto <- paste0(
+  "El tablero muestra que el ",
+  depresion_alta,
+  "% de estudiantes presenta depresión alta y el ",
+  estres_alto,
+  "% reporta estrés alto. ",
+  "El promedio de depresión es ",
+  promedio_depresion,
+  " y el promedio de estrés es ",
+  promedio_estres,
+  ". Estos indicadores permiten identificar grupos prioritarios para seguimiento e intervención."
+)
+
+htmltools::div(
+  style = "
+  background:#eef5ff;
+  border-left:6px solid #2563eb;
+  padding:22px;
+  border-radius:12px;
+  font-size:20px;
+  line-height:1.5;
+  color:#1f2937;
+  ",
+  htmltools::HTML(paste0("💡 <b>Insight clave:</b> ", insight_texto))
+)
+```

@@ -1,0 +1,570 @@
+# Variables compuestas
+
+## Row {height=60px}
+
+Este módulo resume los indicadores construidos a partir de varias preguntas del formulario, permitiendo identificar niveles de depresión, estrés académico y grupos de mayor riesgo.
+
+## Row {height=55px}
+
+```{=html}
+<div class="powerbi-section-title">
+1. Indicadores compuestos principales
+</div>
+```
+
+## Row {height=80px}
+
+```{r}
+# ==================================================
+# Base para variables compuestas
+# ==================================================
+
+base_compuestas <- base_graficas %>%
+  mutate(
+    riesgo_combinado = case_when(
+      clasificacion_depresion == "Alta" & clasificacion_estres == "Alto" ~ "Depresión + estrés alto",
+      clasificacion_depresion == "Alta" & clasificacion_estres == "Bajo" ~ "Solo depresión alta",
+      clasificacion_depresion == "Baja" & clasificacion_estres == "Alto" ~ "Solo estrés alto",
+      clasificacion_depresion == "Baja" & clasificacion_estres == "Bajo" ~ "Sin riesgo aparente",
+      TRUE ~ NA_character_
+    )
+  )
+
+total_estudiantes_comp <- nrow(base_compuestas)
+
+depresion_alta_comp <- round(
+  mean(base_compuestas$clasificacion_depresion == "Alta", na.rm = TRUE) * 100,
+  1
+)
+
+estres_alto_comp <- round(
+  mean(base_compuestas$clasificacion_estres == "Alto", na.rm = TRUE) * 100,
+  1
+)
+
+depresion_estres_alto <- round(
+  mean(base_compuestas$riesgo_combinado == "Depresión + estrés alto", na.rm = TRUE) * 100,
+  1
+)
+
+sin_riesgo <- round(
+  mean(base_compuestas$riesgo_combinado == "Sin riesgo aparente", na.rm = TRUE) * 100,
+  1
+)
+```
+
+
+#### Total estudiantes
+
+```{r}
+value_box(
+  title = "Total estudiantes",
+  value = total_estudiantes_comp,
+  showcase = bsicons::bs_icon("people-fill"),
+  theme = "primary"
+)
+```
+
+#### Depresión alta 
+
+```{r}
+value_box(
+  title = "Depresión alta",
+  value = paste0(depresion_alta_comp, "%"),
+  showcase = bsicons::bs_icon("emoji-frown"),
+  theme = "danger"
+)
+```
+
+#### Estrés alto 
+
+```{r}
+value_box(
+  title = "Estrés alto",
+  value = paste0(estres_alto_comp, "%"),
+  showcase = bsicons::bs_icon("exclamation-triangle"),
+  theme = "warning"
+)
+```
+
+#### Depresión + estrés alto
+
+```{r}
+value_box(
+  title = "Depresión + estrés",
+  value = paste0(depresion_estres_alto, "%"),
+  showcase = bsicons::bs_icon("heart-pulse-fill"),
+  theme = "secondary"
+)
+```
+
+#### Sin riesgo aparente 
+
+```{r}
+value_box(
+  title = "Sin riesgo aparente",
+  value = paste0(sin_riesgo, "%"),
+  showcase = bsicons::bs_icon("shield-check"),
+  theme = "success"
+)
+```
+
+## Row {height=55px}
+
+```{=html}
+<div class="powerbi-section-title">
+2. Matriz de riesgo: depresión y estrés
+</div>
+```
+
+## Row {height=300px}
+
+### Matriz 2x2
+
+```{r}
+#| echo: false
+tabla_riesgo <- base_compuestas %>%
+  count(
+    clasificacion_depresion,
+    clasificacion_estres
+  ) %>%
+  pivot_wider(
+    names_from = clasificacion_estres,
+    values_from = n,
+    values_fill = 0
+  )
+
+tabla_riesgo %>%
+  rename(
+    `Depresión` = clasificacion_depresion,
+    `Estrés alto` = Alto,
+    `Estrés bajo` = Bajo
+  ) %>%
+  gt() %>%
+  tab_header(
+    title = md("**Matriz 2x2 de riesgo combinado**")
+  ) %>%
+  cols_align(
+    align = "center",
+    columns = everything()
+  ) %>%
+  tab_options(
+    table.font.size = px(20),
+    heading.title.font.size = px(22),
+    table.border.top.color = "#E3E8EF",
+    table.border.bottom.color = "#E3E8EF",
+    column_labels.background.color = "#EAF2FF",
+    column_labels.font.weight = "bold"
+  )
+```
+**Interpretación:**
+
+El cuadrante **Depresión alta + Estrés alto (n = 60)** representa el grupo de mayor prioridad para seguimiento e intervención, ya que concentra estudiantes con presencia simultánea de síntomas depresivos y estrés académico elevado.
+
+Por el contrario, el cuadrante **Depresión baja + Estrés bajo (n = 189)** corresponde al grupo con menor nivel de riesgo aparente.
+
+### Mapa de calor
+
+```{r}
+heatmap_riesgo <- base_compuestas %>%
+  count(
+    clasificacion_depresion,
+    clasificacion_estres
+  )
+
+ggplot(
+  heatmap_riesgo,
+  aes(
+    x = clasificacion_estres,
+    y = clasificacion_depresion,
+    fill = n
+  )
+) +
+  geom_tile(color = "white", linewidth = 1) +
+  geom_text(
+    aes(label = n),
+    size = 8,
+    color = "white",
+    fontface = "bold"
+  ) +
+  scale_fill_gradient(
+    low = "#A7D3F4",
+    high = "#2F80ED"
+  ) +
+  labs(
+    x = "Estrés académico",
+    y = "Depresión",
+    fill = "Frecuencia"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    legend.position = "right",
+    panel.grid = element_blank()
+  )
+```
+
+
+## Row {height=55px}
+
+```{=html}
+<div class="powerbi-section-title">
+3. Perfil general de riesgo
+</div>
+```
+
+## Row {height=300px}
+
+### Tabla resumen
+
+```{r}
+perfil_riesgo <- base_compuestas %>%
+  count(riesgo_combinado) %>%
+  mutate(
+    porcentaje = round(n / sum(n) * 100, 1),
+    etiqueta = paste0(porcentaje, "%")
+  )
+
+perfil_riesgo_tabla <- perfil_riesgo %>%
+  mutate(
+    Prioridad = case_when(
+      riesgo_combinado == "Depresión + estrés alto" ~ "Alta",
+      riesgo_combinado == "Solo depresión alta" ~ "Media",
+      riesgo_combinado == "Solo estrés alto" ~ "Media",
+      riesgo_combinado == "Sin riesgo aparente" ~ "Baja",
+      TRUE ~ "Sin clasificar"
+    )
+  ) %>%
+  arrange(desc(n))
+
+perfil_riesgo_tabla %>%
+  rename(
+    `Perfil de riesgo` = riesgo_combinado,
+    `Frecuencia` = n,
+    `Porcentaje (%)` = porcentaje
+  ) %>%
+  gt() %>%
+  tab_header(
+    title = md("**Resumen de perfiles de riesgo**")
+  ) %>%
+  cols_align(
+    align = "center",
+    columns = everything()
+  ) %>%
+
+  tab_options(
+    table.font.size = px(16),
+    heading.title.font.size = px(18),
+    data_row.padding = px(10),
+    column_labels.padding = px(10),
+    column_labels.background.color = "#EAF2FF",
+    column_labels.font.weight = "bold"
+  )
+```
+
+
+### Perfil de riesgo combinado
+
+```{r}
+perfil_riesgo <- base_compuestas %>%
+  count(riesgo_combinado) %>%
+  mutate(
+    porcentaje = round(n / sum(n) * 100, 1),
+    etiqueta = paste0(porcentaje, "%")
+  )
+
+colores_perfil <- c(
+  "Sin riesgo aparente" = "#37B52D",
+  "Solo depresión alta" = "#F5223B",
+  "Solo estrés alto" = "#F97316",
+  "Depresión + estrés alto" = "#343A40"
+)
+
+perfil_riesgo_graf <- plotly::plot_ly(
+  data = perfil_riesgo,
+  labels = ~riesgo_combinado,
+  values = ~n,
+  type = "pie",
+  hole = 0.65,
+  text = ~etiqueta,
+  textinfo = "text",
+  marker = list(
+    colors = colores_perfil[perfil_riesgo$riesgo_combinado]
+  )
+)
+
+perfil_riesgo_graf <- plotly::layout(
+  perfil_riesgo_graf,
+  title = list(text = "Distribución de perfiles de riesgo"),
+  showlegend = TRUE,
+  margin = list(l = 20, r = 20, t = 60, b = 20)
+)
+
+perfil_riesgo_graf
+```
+
+
+### Distribución porcentual
+
+## Row {height=55px}
+
+```{=html}
+<div class="powerbi-section-title">
+4. Factores asociados a variables compuestas
+</div>
+```
+
+## Row {height=300px}
+
+### Tabla: Depresión alta por sexo
+
+```{r}
+tabla_dep_sexo <- base_compuestas %>%
+  count(Sexo, clasificacion_depresion) %>%
+  pivot_wider(
+    names_from = clasificacion_depresion,
+    values_from = n,
+    values_fill = 0
+  ) %>%
+  mutate(
+    Total = Alta + Baja,
+    `% Alta` = round((Alta / Total) * 100, 1)
+  )
+
+tabla_dep_sexo %>%
+  gt() %>%
+  tab_header(
+    title = md("**Depresión alta por sexo**")
+  ) %>%
+  cols_align(
+    align = "center",
+    columns = everything()
+  )
+```
+
+### Gráfica: depresión alta por sexo
+
+```{r}
+graf_dep_sexo <- base_compuestas %>%
+  count(Sexo, clasificacion_depresion) %>%
+  group_by(Sexo) %>%
+  mutate(
+    porcentaje = n / sum(n) * 100
+  )
+
+ggplot(
+  graf_dep_sexo,
+  aes(
+    x = Sexo,
+    y = porcentaje,
+    fill = clasificacion_depresion
+  )
+) +
+  geom_col() +
+  scale_fill_manual(
+    values = c(
+      "Alta" = "#F5223B",
+      "Baja" = "#2F80ED"
+    )
+  ) +
+  labs(
+    x = NULL,
+    y = "Porcentaje (%)",
+    fill = "Depresión"
+  ) +
+  theme_minimal(base_size = 14)
+```
+
+
+## Row {height=300px}
+
+### Tabla: Estrés alto por sexo
+
+```{r}
+tabla_estres_sexo <- base_compuestas %>%
+  count(Sexo, clasificacion_estres) %>%
+  pivot_wider(
+    names_from = clasificacion_estres,
+    values_from = n,
+    values_fill = 0
+  ) %>%
+  mutate(
+    Total = Alto + Bajo,
+    `% Alto` = round((Alto / Total) * 100, 1)
+  )
+
+tabla_estres_sexo %>%
+  gt() %>%
+  tab_header(
+    title = md("**Estrés alto por sexo**")
+  ) %>%
+  cols_align(
+    align = "center",
+    columns = everything()
+  )
+```
+
+### Gráfica: Estrés alto por sexo
+
+```{r}
+graf_estres_sexo <- base_compuestas %>%
+  count(Sexo, clasificacion_estres) %>%
+  group_by(Sexo) %>%
+  mutate(
+    porcentaje = n / sum(n) * 100
+  )
+
+ggplot(
+  graf_estres_sexo,
+  aes(
+    x = Sexo,
+    y = porcentaje,
+    fill = clasificacion_estres
+  )
+) +
+  geom_col(width = 0.65) +
+  scale_fill_manual(
+    values = c(
+      "Alto" = "#F5223B",
+      "Bajo" = "#2F80ED"
+    )
+  ) +
+  labs(
+    x = NULL,
+    y = "Porcentaje (%)",
+    fill = "Estrés"
+  ) +
+  theme_minimal(base_size = 14)
+```
+
+## Row {height=380px}
+
+### Tabla: Depresión alta por grupo de edad
+
+```{r}
+tabla_dep_edad <- base_compuestas %>%
+  count(Grupo_edad, clasificacion_depresion) %>%
+  pivot_wider(
+    names_from = clasificacion_depresion,
+    values_from = n,
+    values_fill = 0
+  ) %>%
+  mutate(
+    Total = Alta + Baja,
+    `% Alta` = round((Alta / Total) * 100, 1)
+  )
+
+tabla_dep_edad %>%
+  gt() %>%
+  tab_header(
+    title = md("**Depresión alta por grupo de edad**")
+  ) %>%
+  cols_align(
+    align = "center",
+    columns = everything()
+  )
+```
+
+### Gráfica: Depresión alta por grupo de edad
+
+```{r}
+graf_dep_edad <- base_compuestas %>%
+  count(Grupo_edad, clasificacion_depresion) %>%
+  group_by(Grupo_edad) %>%
+  mutate(
+    porcentaje = n / sum(n) * 100
+  )
+
+ggplot(
+  graf_dep_edad,
+  aes(
+    x = Grupo_edad,
+    y = porcentaje,
+    fill = clasificacion_depresion
+  )
+) +
+  geom_col(width = 0.65) +
+  scale_fill_manual(
+    values = c(
+      "Alta" = "#F5223B",
+      "Baja" = "#2F80ED"
+    )
+  ) +
+  labs(
+    x = NULL,
+    y = "Porcentaje (%)",
+    fill = "Depresión"
+  ) +
+  theme_minimal(base_size = 14)
+```
+
+## Row {height=380px}
+
+### Tabla: Estrés alto por grupo de edad
+
+```{r}
+tabla_estres_edad <- base_compuestas %>%
+  count(Grupo_edad, clasificacion_estres) %>%
+  pivot_wider(
+    names_from = clasificacion_estres,
+    values_from = n,
+    values_fill = 0
+  ) %>%
+  mutate(
+    Total = Alto + Bajo,
+    `% Alto` = round((Alto / Total) * 100, 1)
+  )
+
+tabla_estres_edad %>%
+  gt() %>%
+  tab_header(
+    title = md("**Estrés alto por grupo de edad**")
+  ) %>%
+  cols_align(
+    align = "center",
+    columns = everything()
+  )
+```
+
+### Gráfica: Estrés alto por grupo de edad
+
+```{r}
+graf_estres_edad <- base_compuestas %>%
+  count(Grupo_edad, clasificacion_estres) %>%
+  group_by(Grupo_edad) %>%
+  mutate(
+    porcentaje = n / sum(n) * 100
+  )
+
+ggplot(
+  graf_estres_edad,
+  aes(
+    x = Grupo_edad,
+    y = porcentaje,
+    fill = clasificacion_estres
+  )
+) +
+  geom_col(width = 0.65) +
+  scale_fill_manual(
+    values = c(
+      "Alto" = "#F5223B",
+      "Bajo" = "#2F80ED"
+    )
+  ) +
+  labs(
+    x = NULL,
+    y = "Porcentaje (%)",
+    fill = "Estrés"
+  ) +
+  theme_minimal(base_size = 14)
+```
+
+
+## Row {height=160px}
+
+```{=html}
+<div class="insight-box">
+💡 <strong>Insight clave:</strong><br>
+Las variables compuestas permiten identificar estudiantes con mayor vulnerabilidad, especialmente aquellos que presentan simultáneamente depresión alta y estrés académico alto.
+</div>
+```
+

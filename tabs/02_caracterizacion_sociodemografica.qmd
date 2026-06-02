@@ -1,0 +1,210 @@
+# Caracterización sociodemográfica
+
+##  {.sidebar}
+
+```{r}
+#| echo: false
+#| results: asis
+
+cat(readLines("tabs/sidebars/sidebar_caracterizacion.qmd", encoding = "UTF-8"), sep = "\n")
+```
+
+## Row
+
+```{r}
+# =========================================
+# Función automática de tablas de frecuencia
+# =========================================
+
+crear_tabla_frecuencia <- function(base, variable, titulo = NULL) {
+  
+  tabla <- base %>%
+    count({{ variable }}, name = "Frecuencia") %>%
+    arrange(desc(Frecuencia)) %>%
+    mutate(
+      Porcentaje = round(Frecuencia / sum(Frecuencia) * 100, 1),
+      Porcentaje_acumulado = round(cumsum(Frecuencia) / sum(Frecuencia) * 100, 1)
+    )
+  
+  total <- sum(tabla$Frecuencia)
+  
+  tabla <- tabla %>%
+    bind_rows(
+      tibble(
+        {{ variable }} := "Total",
+        Frecuencia = total,
+        Porcentaje = 100,
+        Porcentaje_acumulado = 100
+      )
+    )
+  
+  kable(
+    tabla,
+    caption = titulo,
+    col.names = c(
+      "Categoría",
+      "Frecuencia",
+      "Porcentaje (%)",
+      "Porcentaje acumulado (%)"
+    )
+  )
+}
+
+DB_Depresion_label <- DB_Depresion_label %>%
+  mutate(
+    Edad_num = as.numeric(Edad),
+    Grupo_edad = case_when(
+      Edad_num < 20 ~ "Menor de 20 años",
+      Edad_num >= 20 & Edad_num <= 24 ~ "20 a 24 años",
+      Edad_num >= 25 & Edad_num <= 29 ~ "25 a 29 años",
+      Edad_num >= 30 ~ "30 años o más",
+      TRUE ~ "Sin dato"
+    )
+  )
+```
+
+### 
+
+```{r}
+crear_tabla_frecuencia(
+  DB_Depresion_label,
+  Sexo,
+  "Distribución por sexo"
+)
+```
+
+```{r}
+variables_cat <- c(
+  "Sexo",
+  "Departamento",
+  "Universidad",
+  "nivelAcademico"
+)
+```
+
+```{r}
+variables_cat <- c(
+  "Sexo",
+  "Departamento",
+  "Universidad",
+  "nivelAcademico"
+)
+
+for (var in variables_cat) {
+  
+  crear_tabla_frecuencia(
+    DB_Depresion_label,
+    !!sym(var),
+    paste("Distribución por", var)
+  )
+  
+}
+```
+
+```{r}
+# =========================================
+# Función descriptiva para variables numéricas
+# =========================================
+
+crear_tabla_numerica <- function(base,
+                                 variable,
+                                 titulo = NULL) {
+  
+  # Convertir variable a numérica
+  x <- as.numeric(base[[variable]])
+  
+  tabla <- tibble(
+    
+    Media = round(
+      mean(x, na.rm = TRUE),
+      1
+    ),
+    
+    Mediana = round(
+      median(x, na.rm = TRUE),
+      1
+    ),
+    
+    Minimo = min(
+      x,
+      na.rm = TRUE
+    ),
+    
+    Maximo = max(
+      x,
+      na.rm = TRUE
+    ),
+    
+    Desviacion_Estandar = round(
+      sd(x, na.rm = TRUE),
+      1
+    )
+  )
+  
+  kable(
+    tabla,
+    caption = titulo,
+    col.names = c(
+      "Media",
+      "Mediana",
+      "Mínimo",
+      "Máximo",
+      "Desviación estándar"
+    )
+  )
+}
+```
+
+### 
+
+```{r}
+crear_tabla_numerica(
+  DB_Depresion_label,
+  "Edad",
+  "Medidas descriptivas de edad"
+)
+```
+
+## Row
+
+### 
+
+```{r}
+crear_tabla_frecuencia(
+  DB_Depresion_label,
+  Grupo_edad,
+  "Distribución de participantes según grupo de edad"
+)
+```
+
+### 
+
+```{r}
+crear_tabla_frecuencia(
+  DB_Depresion_label,
+  Departamento,
+  "Distribución por departamento"
+)
+```
+
+## Row
+
+### 
+
+```{r}
+crear_tabla_frecuencia(
+  DB_Depresion_label,
+  Universidad,
+  "Distribución por universidad"
+)
+```
+
+### 
+
+```{r}
+crear_tabla_frecuencia(
+  DB_Depresion_label,
+  nivelAcademico,
+  "Distribución por nivel académico"
+)
+```

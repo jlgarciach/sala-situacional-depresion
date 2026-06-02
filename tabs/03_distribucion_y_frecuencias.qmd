@@ -1,0 +1,194 @@
+# Distribución y frecuencias
+
+
+## {.sidebar}
+
+```{r}
+#| echo: false
+#| results: asis
+
+cat(readLines("tabs/sidebars/sidebar_distribucion.qmd", encoding = "UTF-8"), sep = "\n")
+```
+
+## 
+
+::::::::::::::::::::::: panel-tabset
+### Síntomas depresivos
+
+```{r}
+# Preguntas relacionadas con síntomas depresivos
+crear_tabla_frecuencia(
+  DB_Depresion_label,
+  p8,
+  "P8. Poco interés o placer en hacer cosas"
+)
+
+crear_tabla_frecuencia(
+  DB_Depresion_label,
+  p9,
+  "P9. Sentirse triste, deprimido o desesperanzado"
+)
+```
+
+### Factores académicos y hábitos
+
+::::: columns
+::: {.column width="100%"}
+```{r}
+# Factores asociados
+
+crear_tabla_frecuencia(
+  DB_Depresion_label,
+  p10,
+  "P10. Horas promedio de estudio fuera del horario de clases"
+)
+```
+:::
+
+::: {.column width="100%"}
+```{r}
+crear_tabla_frecuencia(
+  DB_Depresion_label,
+  p11,
+  "P11. Percepción de sobrecarga académica"
+)
+```
+:::
+:::::
+
+<br>
+
+::::: columns
+::: {.column width="100%"}
+```{r}
+crear_tabla_frecuencia(
+  DB_Depresion_label,
+  p12,
+  "P12. Horas al día utilizando redes sociales"
+)
+```
+:::
+
+::: {.column width="100%"}
+```{r}
+crear_tabla_frecuencia(
+  DB_Depresion_label,
+  p13,
+  "P13. Horas promedio de sueño"
+)
+```
+:::
+:::::
+
+### Otros factores asociados
+
+::::: columns
+::: {.column width="100%"}
+```{r}
+crear_tabla_frecuencia(
+  DB_Depresion_label,
+  p14,
+  "P14. Frecuencia de consumo de alcohol"
+)
+```
+:::
+
+::: {.column width="100%"}
+```{r}
+crear_tabla_frecuencia(
+  DB_Depresion_label,
+  p15,
+  "P15. Búsqueda de ayuda psicológica en el último año"
+)
+```
+:::
+:::::
+
+<br>
+
+::::: columns
+::: {.column width="100%"}
+```{r}
+crear_tabla_frecuencia(
+  DB_Depresion_label,
+  p16,
+  "P16. Jornada de estudio"
+)
+```
+:::
+
+::: {.column width="100%"}
+```{r}
+crear_tabla_frecuencia(
+  DB_Depresion_label,
+  p17,
+  "P17. Trabaja además de estudiar"
+)
+```
+:::
+:::::
+
+### Estrés académico
+
+::::: columns
+::: {.column width="100%"}
+```{r}
+# Estrés académico
+
+crear_tabla_frecuencia(
+  DB_Depresion_label,
+  p18,
+  "P18. Se ha sentido estresado por sus estudios"
+)
+```
+:::
+
+::: {.column width="100%"}
+```{r}
+crear_tabla_frecuencia(
+  DB_Depresion_label,
+  p19,
+  "P19. Ha sentido presión por tareas, exámenes o entregas"
+)
+```
+:::
+:::::
+
+<br>
+
+::::: columns
+::: {.column width="100%"}
+```{r}
+crear_tabla_frecuencia(
+  DB_Depresion_label,
+  p20,
+  "P20. Ha sentido que no tiene suficiente tiempo para cumplir con sus responsabilidades académicas"
+)
+```
+:::
+
+::: {.column width="100%"}
+```{r}
+crear_tabla_frecuencia(
+  DB_Depresion_label,
+  p21,
+  "P21. Le ha costado concentrarse debido a preocupaciones académicas"
+)
+```
+:::
+:::::
+
+<br>
+
+:::: columns
+::: {.column width="100%"}
+```{r}
+crear_tabla_frecuencia(
+  DB_Depresion_label,
+  p22,
+  "P22. Cuenta con apoyo familiar o social cuando se siente sobrecargado"
+)
+```
+:::
+::::
+:::::::::::::::::::::::

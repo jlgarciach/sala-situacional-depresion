@@ -1,0 +1,84 @@
+# Variables compuestas
+
+## Row {height=80px}
+
+Este módulo resume los indicadores construidos a partir de varias preguntas del formulario, permitiendo identificar niveles de depresión, estrés académico y grupos de mayor riesgo.
+
+## Row {height=55px}
+
+```{=html}
+<div class="powerbi-section-title">
+1. Indicadores compuestos principales
+</div>
+```
+
+## Row {height=120px}
+
+Total estudiantes
+
+Depresión alta
+
+Estrés alto
+
+Depresión + estrés alto
+
+Sin riesgo aparente
+
+## Row {height=55px}
+
+```{=html}
+<div class="powerbi-section-title">
+2. Matriz de riesgo: depresión y estrés
+</div>
+```
+
+## Row {height=380px}
+
+Matriz 2x2
+
+Mapa de calor
+
+## Row {height=55px}
+
+
+```{=html}
+<div class="powerbi-section-title">
+3. Perfil general de riesgo
+</div>
+```
+
+## Row {height=380px}
+
+Perfil de riesgo combinado
+
+Distribución porcentual
+
+## Row {height=55px}
+
+```{=html}
+<div class="powerbi-section-title">
+4. Factores asociados a variables compuestas
+</div>
+```
+
+## Row {height=380px}
+
+Depresión alta por sexo
+
+Estrés alto por sexo
+
+## Row {height=380px}
+
+Depresión alta por grupo de edad
+
+Estrés alto por grupo de edad
+
+## Row {height=160px}
+
+```{=html}
+<div class="insight-box">
+💡 <strong>Insight clave:</strong><br>
+Las variables compuestas permiten identificar estudiantes con mayor vulnerabilidad, especialmente aquellos que presentan simultáneamente depresión alta y estrés académico alto.
+</div>
+```
+

@@ -1,0 +1,13 @@
+"0","#| echo: false"
+"0","tabla_riesgo <- base_compuestas %>%"
+"0","  count("
+"0","    clasificacion_depresion,"
+"0","    clasificacion_estres"
+"0","  ) %>%"
+"0","  pivot_wider("
+"0","    names_from = clasificacion_estres,"
+"0","    values_from = n,"
+"0","    values_fill = 0"
+"0","  )"
+"2","Error: object 'base_compuestas' not found
+"

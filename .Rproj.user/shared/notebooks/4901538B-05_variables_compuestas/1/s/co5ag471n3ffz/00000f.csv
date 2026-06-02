@@ -1,0 +1,13 @@
+"0","tabla_dep_sexo <- base_compuestas %>%"
+"0","  count(sexo, clasificacion_depresion) %>%"
+"0","  pivot_wider("
+"0","    names_from = clasificacion_depresion,"
+"0","    values_from = n,"
+"0","    values_fill = 0"
+"0","  ) %>%"
+"0","  mutate("
+"0","    Total = Alta + Baja,"
+"0","    `% Alta` = round((Alta / Total) * 100, 1)"
+"0","  )"
+"2","Error: object 'base_compuestas' not found
+"
