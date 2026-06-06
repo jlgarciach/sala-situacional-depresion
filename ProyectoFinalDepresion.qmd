@@ -117,3 +117,5 @@ pacman::p_load(httr,
 {{< include tabs/07_analisis_temporal.qmd >}}
 
 {{< include tabs/08_distribucion_geografica.qmd >}}
+
+{{< include tabs/09_acerca_del_proyecto.qmd >}}

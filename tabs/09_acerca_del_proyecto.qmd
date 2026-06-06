@@ -1,0 +1,186 @@
+# Acerca del proyecto
+
+## Row {height="1200"}
+
+```{=html}
+<div style="
+  width:100%;
+  padding:26px 34px;
+  box-sizing:border-box;
+">
+
+  <div style="
+    background:#f5f7fa;
+    border-radius:18px;
+    border-top:6px solid #173f7a;
+    box-shadow:0 3px 12px rgba(0,0,0,.07);
+    padding:34px 42px;
+    margin-bottom:26px;
+  ">
+
+    <h2 style="color:#173f7a; margin-top:0; font-size:34px;">
+      Acerca de la Sala Situacional Epidemiológica
+    </h2>
+
+    <p style="font-size:17px; line-height:1.7; color:#333; text-align:justify;">
+      Esta Sala Situacional Epidemiológica fue desarrollada como una propuesta de sistema de vigilancia
+      para el monitoreo de síntomas depresivos y factores asociados en estudiantes universitarios. 
+      Integra recolección de datos mediante KoBoToolbox, análisis estadístico en RStudio y visualización
+      interactiva mediante Quarto, con el propósito de generar información oportuna, comprensible y útil
+      para la toma de decisiones en salud mental universitaria.
+    </p>
+
+  </div>
+
+  <div style="
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:22px;
+    margin-bottom:26px;
+  ">
+
+    <div style="background:white; border-radius:16px; padding:24px; box-shadow:0 2px 10px rgba(0,0,0,.06); border-left:6px solid #0072CE;">
+      <h3 style="color:#173f7a; margin-top:0;">Objetivo general</h3>
+      <p style="font-size:15px; line-height:1.6; color:#333;">
+        Diseñar un sistema de vigilancia epidemiológica para monitorear síntomas depresivos y factores
+        asociados en estudiantes universitarios.
+      </p>
+    </div>
+
+    <div style="background:white; border-radius:16px; padding:24px; box-shadow:0 2px 10px rgba(0,0,0,.06); border-left:6px solid #F2B705;">
+      <h3 style="color:#173f7a; margin-top:0;">Evento vigilado</h3>
+      <p style="font-size:15px; line-height:1.6; color:#333;">
+        Síntomas depresivos, estrés académico, hábitos de sueño, uso de redes sociales, consumo de alcohol
+        y búsqueda de apoyo psicológico.
+      </p>
+    </div>
+
+    <div style="background:white; border-radius:16px; padding:24px; box-shadow:0 2px 10px rgba(0,0,0,.06); border-left:6px solid #00A86B;">
+      <h3 style="color:#173f7a; margin-top:0;">Tipo de vigilancia</h3>
+      <p style="font-size:15px; line-height:1.6; color:#333;">
+        Vigilancia activa con modalidad centinela, orientada a monitorear tendencias en grupos universitarios participantes.
+      </p>
+    </div>
+
+  </div>
+
+  <div style="
+    background:white;
+    border-radius:18px;
+    padding:30px 38px;
+    box-shadow:0 2px 10px rgba(0,0,0,.06);
+    margin-bottom:26px;
+  ">
+
+    <h3 style="color:#173f7a; font-size:26px; margin-top:0;">
+      Estructura del sistema de vigilancia
+    </h3>
+
+    <ol style="font-size:16px; line-height:1.8; color:#333; padding-left:24px;">
+      <li><strong>Recolección de datos:</strong> diseño, validación y aplicación del formulario electrónico en KoBoToolbox.</li>
+      <li><strong>Análisis de datos:</strong> conexión con R, depuración de datos, generación de tablas, indicadores y pruebas estadísticas.</li>
+      <li><strong>Interpretación:</strong> identificación de tendencias, grupos vulnerables y factores asociados a síntomas depresivos.</li>
+      <li><strong>Difusión:</strong> presentación de resultados mediante dashboard interactivo para apoyar la toma de decisiones.</li>
+    </ol>
+
+  </div>
+
+  <div style="
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:24px;
+    margin-bottom:26px;
+  ">
+
+    <div style="background:white; border-radius:18px; padding:28px; box-shadow:0 2px 10px rgba(0,0,0,.06);">
+      <h3 style="color:#173f7a; margin-top:0;">Recurso humano necesario</h3>
+
+      <table style="width:100%; border-collapse:collapse; font-size:15px;">
+  <thead>
+    <tr style="background:#EAF3FF;">
+<th style="padding:10px; text-align:left;">Perfil</th>
+<th style="padding:10px; text-align:left;">Función principal</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td style="padding:10px;">Coordinador</td><td style="padding:10px;">Supervisión del sistema</td></tr>
+    <tr style="background:#f2f2f2;"><td style="padding:10px;">Epidemiólogo</td><td style="padding:10px;">Diseño, análisis e interpretación</td></tr>
+    <tr><td style="padding:10px;">Asistente</td><td style="padding:10px;">Seguimiento y gestión de datos</td></tr>
+    <tr style="background:#f2f2f2;"><td style="padding:10px;">Profesional de salud mental</td><td style="padding:10px;">Asesoría técnica y recomendaciones</td></tr>
+  </tbody>
+</table>
+    </div>
+
+    <div style="background:white; border-radius:18px; padding:28px; box-shadow:0 2px 10px rgba(0,0,0,.06);">
+      <h3 style="color:#173f7a; margin-top:0;">Temporalidad propuesta</h3>
+
+      <ul style="font-size:16px; line-height:1.8; color:#333; padding-left:20px;">
+        <li><strong>Recolección:</strong> trimestral</li>
+        <li><strong>Análisis:</strong> trimestral al cierre de cada ronda</li>
+        <li><strong>Reportes:</strong> trimestrales</li>
+        <li><strong>Toma de decisiones:</strong> según ciclo de análisis institucional</li>
+      </ul>
+
+      <div style="
+        margin-top:16px;
+        padding:14px;
+        background:#FFF8E6;
+        border-left:5px solid #F2B705;
+        border-radius:10px;
+        font-size:15px;
+        line-height:1.6;
+      ">
+        La periodicidad trimestral permite observar variaciones relacionadas con el ciclo académico.
+      </div>
+    </div>
+
+  </div>
+
+  <div style="
+    background:#EAF3FF;
+    border-radius:18px;
+    padding:30px 38px;
+    border-left:8px solid #0072CE;
+    box-shadow:0 2px 10px rgba(0,0,0,.05);
+  ">
+
+    <h3 style="color:#173f7a; margin-top:0; font-size:26px;">
+      Indicadores clave del sistema
+    </h3>
+
+    <div style="
+      display:grid;
+      grid-template-columns:repeat(2, 1fr);
+      gap:20px;
+    ">
+
+      <div>
+        <h4 style="color:#333;">Indicadores de proceso</h4>
+        <ul style="font-size:15px; line-height:1.8;">
+          <li>Cobertura de participación</li>
+          <li>Completitud de la información</li>
+          <li>Oportunidad de análisis</li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 style="color:#333;">Indicadores de resultado</h4>
+        <ul style="font-size:15px; line-height:1.8;">
+          <li>Prevalencia de síntomas depresivos</li>
+          <li>Porcentaje de estudiantes que buscaron ayuda psicológica</li>
+          <li>Porcentaje con sobrecarga académica percibida</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <p style="font-size:16px; line-height:1.7; color:#333; margin-bottom:0;">
+      <strong>Valor agregado:</strong> el tablero permite transformar datos recolectados en información
+      útil para vigilancia, análisis, comunicación de hallazgos y planificación de acciones preventivas
+      en salud mental universitaria.
+    </p>
+
+  </div>
+
+</div>
+```
