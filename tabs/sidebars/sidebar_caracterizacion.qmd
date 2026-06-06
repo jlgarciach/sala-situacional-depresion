@@ -1,42 +1,67 @@
 ### Análisis de Resultados:
 
-El tablero epidemiológico logró consolidar un total de 309 registros válidos y 24 variables finales para el análisis, provenientes de un formulario electrónico conectado en tiempo real con KoBoToolbox. Este proceso permitió contar con una base de datos limpia, organizada y actualizada, fortaleciendo la calidad del análisis epidemiológico.
+```{r}
+#| echo: false
+#| results: asis
+#| message: false
+#| warning: false
 
-La integración de herramientas como RStudio, Quarto y KoBoToolbox facilitó la automatización del procesamiento de datos, permitiendo una vigilancia más dinámica de los síntomas depresivos en estudiantes universitarios. Además, la actualización continua de la información favorece el monitoreo oportuno de tendencias relacionadas con salud mental en población universitaria.
+base_carac <- DB_Depresion_label %>%
+  mutate(Edad_num = suppressWarnings(as.numeric(Edad)))
 
-Los resultados evidencian que el uso de plataformas digitales para la recolección y visualización de información constituye una estrategia eficiente para estudios epidemiológicos descriptivos, especialmente en contextos académicos donde se requiere análisis rápidos y visualmente comprensibles.
+total_registros <- nrow(base_carac)
+total_variables <- ncol(base_carac)
 
-Variable 1:  **Caracterización sociodemográfica**
+sexo_top <- base_carac %>%
+  filter(!is.na(Sexo)) %>%
+  count(Sexo, name = "n") %>%
+  mutate(pct = round(n / sum(n) * 100, 1)) %>%
+  arrange(desc(n)) %>%
+  slice(1)
 
----
+edad_media <- round(mean(base_carac$Edad_num, na.rm = TRUE), 1)
 
-**Distribución por sexo**
+depto_top <- base_carac %>%
+  filter(!is.na(Departamento)) %>%
+  count(Departamento, name = "n") %>%
+  mutate(pct = round(n / sum(n) * 100, 1)) %>%
+  arrange(desc(n)) %>%
+  slice(1)
 
-La mayoría de participantes correspondió al sexo femenino, representando el 66.7% de la muestra, mientras que los hombres constituyeron el 29.8% y el 3.6% prefirió no responder. Estos hallazgos sugieren una mayor participación de mujeres en el estudio, situación frecuente en investigaciones relacionadas con salud mental y bienestar emocional.
+htmltools::HTML(glue::glue("
+<p style='font-size:14px; line-height:1.55;'>
+El tablero consolida <strong>{total_registros}</strong> registros válidos y 
+<strong>{total_variables}</strong> variables finales.
+</p>
 
-La elevada participación femenina puede influir en la interpretación de los resultados, considerando que diversos estudios epidemiológicos han demostrado una mayor prevalencia de síntomas depresivos en mujeres universitarias debido a factores biológicos, sociales y académicos.
+<hr>
 
----
+<p style='font-size:14px; line-height:1.55;'>
+La mayor participación corresponde a <strong>{sexo_top$Sexo}</strong> 
+(<strong>{sexo_top$pct}%</strong>).
+</p>
 
-**Distribución por edad**
+<p style='font-size:14px; line-height:1.55;'>
+La edad promedio fue de <strong>{edad_media}</strong> años.
+</p>
 
-La edad promedio de los participantes fue de 21.6 años, con una mediana de 20 años, una desviación estándar de 5 años y edades comprendidas entre 17 y 52 años.
-El grupo etario predominante fue el de 20 a 24 años con un 42.7%, seguido por los menores de 20 años con 41.4%. Los estudiantes de 25 a 29 años representaron el 8.4% y aquellos de 30 años o más el 7.4%.
+<p style='font-size:14px; line-height:1.55;'>
+El departamento con mayor participación fue <strong>{depto_top$Departamento}</strong>, 
+con <strong>{depto_top$n}</strong> registros 
+(<strong>{depto_top$pct}%</strong>).
+</p>
 
-Estos resultados evidencian que la mayor parte de la población estudiada corresponde a adultos jóvenes, etapa de la vida en la que suelen presentarse importantes cambios emocionales, académicos y sociales que pueden incrementar la vulnerabilidad a síntomas depresivos.
-
----
-
-**Nivel académico**
-
-La mayoría de participantes cursa estudios de licenciatura, representando el 91.6% de la muestra, mientras que el 6.8% pertenecía a programas de maestría y únicamente el 1.6% a doctorado.
-
-Esto indica que la población evaluada estuvo compuesta principalmente por estudiantes de pregrado, quienes generalmente enfrentan mayores cargas académicas, adaptación universitaria y presión social, factores que pueden relacionarse con alteraciones emocionales y síntomas depresivos.
-
----
-
-**Facultad o área académica**
-
-Se observó predominio de estudiantes pertenecientes al área de Ciencias de la Salud y carreras relacionadas con enfermería. También participaron estudiantes de ingeniería, ciencias económicas, humanidades y ciencias jurídicas.
-
-El predominio de estudiantes del área de salud puede relacionarse con un mayor interés en investigaciones vinculadas con bienestar emocional y salud pública. Asimismo, las carreras del área sanitaria suelen asociarse a elevados niveles de estrés académico, sobrecarga de tareas y exposición emocional, factores que podrían influir en la presencia de síntomas depresivos.
+<div style='
+  margin-top:15px;
+  padding:12px;
+  background:#EAF3FF;
+  border-left:5px solid #0072CE;
+  border-radius:10px;
+  font-size:14px;
+  line-height:1.55;
+'>
+<strong>Impacto:</strong><br>
+Esta caracterización permite interpretar los resultados de depresión y estrés según el perfil sociodemográfico de la población estudiada.
+</div>
+"))
+```

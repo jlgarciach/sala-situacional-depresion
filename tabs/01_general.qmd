@@ -66,10 +66,68 @@ El formulario se puede descargar en su versión digital (PDF) para poder analiza
 
 **Base de datos**
 
-- Metadatos
-- Base de datos
+Descarga la base limpia y la codificación utilizada en el tablero.
 
-sadfasdf asdfasdf <CSV> <Excel> <SPSS>
+```{=html}
+<div style="margin-top:18px; display:flex; flex-direction:column; gap:14px;">
+
+  <a href="data/exportaciones/base_limpia_etiquetada.xlsx"
+     download
+     style="
+       background-color:#0072B2;
+       color:white;
+       padding:14px 18px;
+       text-decoration:none;
+       border-radius:10px;
+       font-weight:bold;
+       font-size:15px;
+       display:inline-block;
+       text-align:center;
+       box-shadow:0 3px 10px rgba(0,0,0,.15);
+     ">
+     📊 Descargar base con etiquetas
+  </a>
+
+  <a href="data/exportaciones/base_limpia_codigos.xlsx"
+     download="base_limpia_codigos.xlsx"
+     style="
+       background-color:#555555;
+       color:white;
+       padding:14px 18px;
+       text-decoration:none;
+       border-radius:10px;
+       font-weight:bold;
+       font-size:15px;
+       display:inline-block;
+       text-align:center;
+       box-shadow:0 3px 10px rgba(0,0,0,.15);
+     ">
+     🔢 Descargar base con códigos
+  </a>
+
+  <a href="data/exportaciones/metadata_codificacion_preguntas.xlsx"
+     download
+     style="
+       background-color:#173F7A;
+       color:white;
+       padding:14px 18px;
+       text-decoration:none;
+       border-radius:10px;
+       font-weight:bold;
+       font-size:15px;
+       display:inline-block;
+       text-align:center;
+       box-shadow:0 3px 10px rgba(0,0,0,.15);
+     ">
+     📘 Descargar metadata
+  </a>
+
+</div>
+```
+
+
+
+
 
 ## Row
 
@@ -473,5 +531,84 @@ DT::datatable(
   ),
   caption = "Base epidemiológica limpia y etiquetada automáticamente",
   rownames = FALSE
+)
+```
+
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+# ==============================
+# Paso 7: Exportación de archivos Excel
+# ==============================
+
+if (!requireNamespace("writexl", quietly = TRUE)) {
+  install.packages("writexl")
+}
+
+library(writexl)
+
+dir.create("data/exportaciones", recursive = TRUE, showWarnings = FALSE)
+
+limpiar_para_excel <- function(df) {
+  df %>%
+    mutate(
+      across(
+        where(is.list),
+        ~ sapply(.x, function(x) paste(unlist(x), collapse = " | "))
+      )
+    )
+}
+
+survey_excel <- limpiar_para_excel(survey)
+choices_excel <- limpiar_para_excel(choices)
+
+diccionario_preguntas <- survey_excel %>%
+  select(any_of(c(
+    "name",
+    "type",
+    "label",
+    "hint",
+    "required",
+    "constraint",
+    "calculation",
+    "select_from_list_name"
+  )))
+
+codificacion_respuestas <- choices_excel %>%
+  select(any_of(c(
+    "list_name",
+    "name",
+    "$autovalue",
+    "label"
+  )))
+
+write_xlsx(
+  list(
+    "Base_limpia_etiquetada" = DB_Depresion_label
+  ),
+  path = "data/exportaciones/base_limpia_etiquetada.xlsx"
+)
+
+write_xlsx(
+  list(
+    "Preguntas" = diccionario_preguntas,
+    "Codificacion_respuestas" = codificacion_respuestas,
+    "Survey_original" = survey_excel,
+    "Choices_original" = choices_excel
+  ),
+  path = "data/exportaciones/metadata_codificacion_preguntas.xlsx"
+)
+
+write_xlsx(
+  list("Base_limpia_codigos" = DB_Depresion),
+  "data/exportaciones/base_limpia_codigos.xlsx"
+)
+
+write_xlsx(
+  list("Base_limpia_etiquetada" = DB_Depresion_label),
+  "data/exportaciones/base_limpia_etiquetada.xlsx"
 )
 ```

@@ -1,13 +1,9 @@
 # Distribución y frecuencias
 
-
-## {.sidebar}
+##  {.sidebar}
 
 ```{r}
-#| echo: false
-#| results: asis
-
-cat(readLines("tabs/sidebars/sidebar_distribucion.qmd", encoding = "UTF-8"), sep = "\n")
+#| child: tabs/sidebars/sidebar_distribucion.qmd
 ```
 
 ## 

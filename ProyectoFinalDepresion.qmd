@@ -78,7 +78,12 @@ pacman::p_load(httr,
                plotly,
                epitools,
                sf,
-              geodata
+               geodata,
+               glue,
+               htmltools
+               
+               
+
                
                #knitr,
                #tidyverse, # para manipular los datos
